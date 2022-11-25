@@ -1,4 +1,5 @@
-import 'package:dexcom_board/ui/home_screen.dart';
+import 'package:dexcom_board/app/constants.dart';
+import 'package:dexcom_board/ui/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,9 +14,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Dexcom Board',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: AppColors.primarySwatch,
       ),
-      home: const HomeScreen(),
+      home: const DashBoardScreen(),
     );
   }
 }
