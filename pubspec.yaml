@@ -12,6 +12,7 @@ dependencies:
   dexcom_share_api:
     path: ./packages/dexcom_share_api
   dio: ^4.0.6
+  either_dart: ^0.3.0
   flutter:
     sdk: flutter
   freezed_annotation: ^2.2.0

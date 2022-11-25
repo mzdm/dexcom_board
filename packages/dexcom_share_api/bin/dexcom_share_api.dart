@@ -1,5 +1,7 @@
-import 'package:dexcom_share_api/dexcom_share_api.dart' as dexcom_share_api;
+import 'package:dexcom_share_api/dexcom_share_api.dart';
 
-void main(List<String> arguments) {
-  print('Hello world: ${dexcom_share_api.calculate()}!');
+Future<void> main(List<String> arguments) async {
+  final client = DexcomUserApi();
+  await client.init(username: 'username', password: 'password');
+  final events = await client.getGlucoseEventRecords(minutes: 10);
 }

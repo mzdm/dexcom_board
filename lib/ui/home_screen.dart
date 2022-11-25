@@ -1,3 +1,5 @@
+import 'package:dexcom_share_api/dexcom_http.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,8 +16,10 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-              onPressed: () {
+              onPressed: ()async  {
                 //
+                final client = DexcomUserApi();
+                await client.init(username: 'ffd', password: 'fddf');
               },
               child: Text('Glucose'),
             ),
