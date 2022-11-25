@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:dexcom_board/common.dart';
+import 'package:dexcom_board/navigation/app_router.gr.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class DashBoardScreen extends StatelessWidget {
+  const DashBoardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('DashBoard'),
       ),
       body: Center(
         child: Column(
@@ -15,9 +16,9 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                //
+                context.pushRoute(const PatientDetailRoute());
               },
-              child: Text('Glucose'),
+              child: const Text('Glucose'),
             ),
           ],
         ),
