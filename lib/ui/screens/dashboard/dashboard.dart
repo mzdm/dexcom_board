@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class DashBoardScreen extends StatelessWidget {
+  const DashBoardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('DashBoard'),
       ),
       body: Center(
         child: Column(
@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 //
               },
-              child: Text('Glucose'),
+              child: const Text('Glucose'),
             ),
           ],
         ),

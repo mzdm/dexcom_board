@@ -14,7 +14,7 @@
 import 'package:auto_route/auto_route.dart' as _i2;
 import 'package:flutter/material.dart' as _i3;
 
-import '../ui/home_screen.dart' as _i1;
+import '../ui/screens/dashboard/dashboard.dart' as _i1;
 
 class AppRouter extends _i2.RootStackRouter {
   AppRouter([_i3.GlobalKey<_i3.NavigatorState>? navigatorKey])
@@ -25,7 +25,7 @@ class AppRouter extends _i2.RootStackRouter {
     HomeRoute.name: (routeData) {
       return _i2.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i1.HomeScreen(),
+        child: const _i1.DashBoardScreen(),
       );
     }
   };
@@ -40,7 +40,7 @@ class AppRouter extends _i2.RootStackRouter {
 }
 
 /// generated route for
-/// [_i1.HomeScreen]
+/// [_i1.DashBoardScreen]
 class HomeRoute extends _i2.PageRouteInfo<void> {
   const HomeRoute()
       : super(
