@@ -57,35 +57,35 @@ Map<String, dynamic> _$$_ReadOptionsToJson(_$_ReadOptions instance) =>
 _$_GlucoseEventRecord _$$_GlucoseEventRecordFromJson(
         Map<String, dynamic> json) =>
     _$_GlucoseEventRecord(
-      DT: json['DT'] as String?,
-      ST: json['ST'] as String?,
-      trend: $enumDecodeNullable(_$TrendEnumMap, json['trend']),
-      value: json['value'] as num?,
-      WT: json['WT'] as String?,
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      Trend: $enumDecodeNullable(_$FutureTrendEnumMap, json['Trend']),
+      Value: json['Value'] as int?,
+      WT: _$JsonConverterFromJson<String, DateTime?>(
+          json['WT'], const ValueDateTimeConverter().fromJson),
     );
 
 Map<String, dynamic> _$$_GlucoseEventRecordToJson(
         _$_GlucoseEventRecord instance) =>
     <String, dynamic>{
-      'DT': instance.DT,
-      'ST': instance.ST,
-      'trend': _$TrendEnumMap[instance.trend],
-      'value': instance.value,
-      'WT': instance.WT,
-      'date': instance.date?.toIso8601String(),
+      'Trend': _$FutureTrendEnumMap[instance.Trend],
+      'Value': instance.Value,
+      'WT': const ValueDateTimeConverter().toJson(instance.WT),
     };
 
-const _$TrendEnumMap = {
-  Trend.none: 'none',
-  Trend.doubleUp: 'doubleUp',
-  Trend.singleUp: 'singleUp',
-  Trend.fortyFiveUp: 'fortyFiveUp',
-  Trend.flat: 'flat',
-  Trend.fortyFiveDown: 'fortyFiveDown',
-  Trend.singleDown: 'singleDown',
-  Trend.doubleDown: 'doubleDown',
-  Trend.notComputable: 'notComputable',
-  Trend.outOfRange: 'outOfRange',
+const _$FutureTrendEnumMap = {
+  FutureTrend.None: 'None',
+  FutureTrend.DoubleUp: 'DoubleUp',
+  FutureTrend.SingleUp: 'SingleUp',
+  FutureTrend.FortyFiveUp: 'FortyFiveUp',
+  FutureTrend.Flat: 'Flat',
+  FutureTrend.FortyFiveDown: 'FortyFiveDown',
+  FutureTrend.SingleDown: 'SingleDown',
+  FutureTrend.DoubleDown: 'DoubleDown',
+  FutureTrend.NotComputable: 'NotComputable',
+  FutureTrend.OutOfRange: 'OutOfRange',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);

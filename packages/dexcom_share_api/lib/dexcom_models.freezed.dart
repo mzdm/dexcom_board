@@ -601,12 +601,12 @@ GlucoseEventRecord _$GlucoseEventRecordFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GlucoseEventRecord {
-  String? get DT => throw _privateConstructorUsedError;
-  String? get ST => throw _privateConstructorUsedError;
-  Trend? get trend => throw _privateConstructorUsedError;
-  num? get value => throw _privateConstructorUsedError;
-  String? get WT => throw _privateConstructorUsedError;
-  DateTime? get date => throw _privateConstructorUsedError;
+// String? DT,
+// String? ST,
+  FutureTrend? get Trend => throw _privateConstructorUsedError;
+  int? get Value => throw _privateConstructorUsedError;
+  @ValueDateTimeConverter()
+  DateTime? get WT => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -621,12 +621,7 @@ abstract class $GlucoseEventRecordCopyWith<$Res> {
       _$GlucoseEventRecordCopyWithImpl<$Res, GlucoseEventRecord>;
   @useResult
   $Res call(
-      {String? DT,
-      String? ST,
-      Trend? trend,
-      num? value,
-      String? WT,
-      DateTime? date});
+      {FutureTrend? Trend, int? Value, @ValueDateTimeConverter() DateTime? WT});
 }
 
 /// @nodoc
@@ -642,37 +637,22 @@ class _$GlucoseEventRecordCopyWithImpl<$Res, $Val extends GlucoseEventRecord>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? DT = freezed,
-    Object? ST = freezed,
-    Object? trend = freezed,
-    Object? value = freezed,
+    Object? Trend = freezed,
+    Object? Value = freezed,
     Object? WT = freezed,
-    Object? date = freezed,
   }) {
     return _then(_value.copyWith(
-      DT: freezed == DT
-          ? _value.DT
-          : DT // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ST: freezed == ST
-          ? _value.ST
-          : ST // ignore: cast_nullable_to_non_nullable
-              as String?,
-      trend: freezed == trend
-          ? _value.trend
-          : trend // ignore: cast_nullable_to_non_nullable
-              as Trend?,
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as num?,
+      Trend: freezed == Trend
+          ? _value.Trend
+          : Trend // ignore: cast_nullable_to_non_nullable
+              as FutureTrend?,
+      Value: freezed == Value
+          ? _value.Value
+          : Value // ignore: cast_nullable_to_non_nullable
+              as int?,
       WT: freezed == WT
           ? _value.WT
           : WT // ignore: cast_nullable_to_non_nullable
-              as String?,
-      date: freezed == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
     ) as $Val);
   }
@@ -687,12 +667,7 @@ abstract class _$$_GlucoseEventRecordCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? DT,
-      String? ST,
-      Trend? trend,
-      num? value,
-      String? WT,
-      DateTime? date});
+      {FutureTrend? Trend, int? Value, @ValueDateTimeConverter() DateTime? WT});
 }
 
 /// @nodoc
@@ -706,37 +681,22 @@ class __$$_GlucoseEventRecordCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? DT = freezed,
-    Object? ST = freezed,
-    Object? trend = freezed,
-    Object? value = freezed,
+    Object? Trend = freezed,
+    Object? Value = freezed,
     Object? WT = freezed,
-    Object? date = freezed,
   }) {
     return _then(_$_GlucoseEventRecord(
-      DT: freezed == DT
-          ? _value.DT
-          : DT // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ST: freezed == ST
-          ? _value.ST
-          : ST // ignore: cast_nullable_to_non_nullable
-              as String?,
-      trend: freezed == trend
-          ? _value.trend
-          : trend // ignore: cast_nullable_to_non_nullable
-              as Trend?,
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as num?,
+      Trend: freezed == Trend
+          ? _value.Trend
+          : Trend // ignore: cast_nullable_to_non_nullable
+              as FutureTrend?,
+      Value: freezed == Value
+          ? _value.Value
+          : Value // ignore: cast_nullable_to_non_nullable
+              as int?,
       WT: freezed == WT
           ? _value.WT
           : WT // ignore: cast_nullable_to_non_nullable
-              as String?,
-      date: freezed == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
               as DateTime?,
     ));
   }
@@ -746,28 +706,25 @@ class __$$_GlucoseEventRecordCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_GlucoseEventRecord extends _GlucoseEventRecord {
   const _$_GlucoseEventRecord(
-      {this.DT, this.ST, this.trend, this.value, this.WT, this.date})
+      {this.Trend, this.Value, @ValueDateTimeConverter() this.WT})
       : super._();
 
   factory _$_GlucoseEventRecord.fromJson(Map<String, dynamic> json) =>
       _$$_GlucoseEventRecordFromJson(json);
 
+// String? DT,
+// String? ST,
   @override
-  final String? DT;
+  final FutureTrend? Trend;
   @override
-  final String? ST;
+  final int? Value;
   @override
-  final Trend? trend;
-  @override
-  final num? value;
-  @override
-  final String? WT;
-  @override
-  final DateTime? date;
+  @ValueDateTimeConverter()
+  final DateTime? WT;
 
   @override
   String toString() {
-    return 'GlucoseEventRecord(DT: $DT, ST: $ST, trend: $trend, value: $value, WT: $WT, date: $date)';
+    return 'GlucoseEventRecord(Trend: $Trend, Value: $Value, WT: $WT)';
   }
 
   @override
@@ -775,17 +732,14 @@ class _$_GlucoseEventRecord extends _GlucoseEventRecord {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GlucoseEventRecord &&
-            (identical(other.DT, DT) || other.DT == DT) &&
-            (identical(other.ST, ST) || other.ST == ST) &&
-            (identical(other.trend, trend) || other.trend == trend) &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.WT, WT) || other.WT == WT) &&
-            (identical(other.date, date) || other.date == date));
+            (identical(other.Trend, Trend) || other.Trend == Trend) &&
+            (identical(other.Value, Value) || other.Value == Value) &&
+            (identical(other.WT, WT) || other.WT == WT));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, DT, ST, trend, value, WT, date);
+  int get hashCode => Object.hash(runtimeType, Trend, Value, WT);
 
   @JsonKey(ignore: true)
   @override
@@ -804,29 +758,22 @@ class _$_GlucoseEventRecord extends _GlucoseEventRecord {
 
 abstract class _GlucoseEventRecord extends GlucoseEventRecord {
   const factory _GlucoseEventRecord(
-      {final String? DT,
-      final String? ST,
-      final Trend? trend,
-      final num? value,
-      final String? WT,
-      final DateTime? date}) = _$_GlucoseEventRecord;
+      {final FutureTrend? Trend,
+      final int? Value,
+      @ValueDateTimeConverter() final DateTime? WT}) = _$_GlucoseEventRecord;
   const _GlucoseEventRecord._() : super._();
 
   factory _GlucoseEventRecord.fromJson(Map<String, dynamic> json) =
       _$_GlucoseEventRecord.fromJson;
 
+  @override // String? DT,
+// String? ST,
+  FutureTrend? get Trend;
   @override
-  String? get DT;
+  int? get Value;
   @override
-  String? get ST;
-  @override
-  Trend? get trend;
-  @override
-  num? get value;
-  @override
-  String? get WT;
-  @override
-  DateTime? get date;
+  @ValueDateTimeConverter()
+  DateTime? get WT;
   @override
   @JsonKey(ignore: true)
   _$$_GlucoseEventRecordCopyWith<_$_GlucoseEventRecord> get copyWith =>

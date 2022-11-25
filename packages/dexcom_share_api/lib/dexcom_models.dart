@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dexcom_models.freezed.dart';
-
 part 'dexcom_models.g.dart';
 
 @freezed
@@ -49,12 +48,11 @@ class ReadOptions with _$ReadOptions {
 @freezed
 class GlucoseEventRecord with _$GlucoseEventRecord {
   const factory GlucoseEventRecord({
-    String? DT,
-    String? ST,
-    Trend? trend,
-    num? value,
-    String? WT,
-    DateTime? date,
+    // String? DT,
+    // String? ST,
+    FutureTrend? Trend,
+    int? Value,
+    @ValueDateTimeConverter() DateTime? WT,
   }) = _GlucoseEventRecord;
 
   const GlucoseEventRecord._();
@@ -63,40 +61,58 @@ class GlucoseEventRecord with _$GlucoseEventRecord {
       _$GlucoseEventRecordFromJson(json);
 }
 
-enum Trend {
-  none,
-  doubleUp,
-  singleUp,
-  fortyFiveUp,
-  flat,
-  fortyFiveDown,
-  singleDown,
-  doubleDown,
-  notComputable,
-  outOfRange;
+enum FutureTrend {
+  None,
+  DoubleUp,
+  SingleUp,
+  FortyFiveUp,
+  Flat,
+  FortyFiveDown,
+  SingleDown,
+  DoubleDown,
+  NotComputable,
+  OutOfRange;
 
   String get description {
     switch (this) {
-      case Trend.none:
+      case FutureTrend.None:
         return "";
-      case Trend.doubleUp:
+      case FutureTrend.DoubleUp:
         return "rising quickly";
-      case Trend.singleUp:
+      case FutureTrend.SingleUp:
         return "rising";
-      case Trend.fortyFiveUp:
+      case FutureTrend.FortyFiveUp:
         return "rising slightly";
-      case Trend.flat:
+      case FutureTrend.Flat:
         return "steady";
-      case Trend.fortyFiveDown:
+      case FutureTrend.FortyFiveDown:
         return "falling slightly";
-      case Trend.singleDown:
+      case FutureTrend.SingleDown:
         return "falling";
-      case Trend.doubleDown:
+      case FutureTrend.DoubleDown:
         return "falling quickly";
-      case Trend.notComputable:
+      case FutureTrend.NotComputable:
         return "unable to determine trend";
-      case Trend.outOfRange:
+      case FutureTrend.OutOfRange:
         return "trend unavailable";
     }
+  }
+}
+
+class ValueDateTimeConverter implements JsonConverter<DateTime?, String> {
+  const ValueDateTimeConverter();
+
+  @override
+  DateTime? fromJson(String json) {
+    final parsed = int.tryParse(json.replaceAll(RegExp('[^0-9]'), ''));
+    if (parsed == null) {
+      return null;
+    }
+    return DateTime.fromMillisecondsSinceEpoch(parsed);
+  }
+
+  @override
+  String toJson(DateTime? v) {
+    return v?.toIso8601String() ?? '';
   }
 }
