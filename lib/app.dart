@@ -1,7 +1,5 @@
-import 'package:dexcom_board/app/constants.dart';
+import 'package:dexcom_board/common.dart';
 import 'package:dexcom_board/ui/screens/dashboard/dashboard.dart';
-import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

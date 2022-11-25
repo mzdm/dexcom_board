@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:dexcom_board/common.dart';
+import 'package:dexcom_board/navigation/app_router.gr.dart';
 
 class DashBoardScreen extends StatelessWidget {
   const DashBoardScreen({super.key});
@@ -15,7 +16,7 @@ class DashBoardScreen extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                //
+                context.pushRoute(const PatientDetailRoute());
               },
               child: const Text('Glucose'),
             ),
