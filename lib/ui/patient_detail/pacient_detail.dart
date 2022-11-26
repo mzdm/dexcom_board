@@ -162,7 +162,7 @@ class PatientDetailScreen extends StatelessWidget {
   TableRow getTableRow(GlucoseEventRecord dataRow) {
     String formattedDate = '';
     if (dataRow.WT != null) {
-      formattedDate = DateFormat('d. M. kk:mm').format(dataRow.WT!);
+      formattedDate = DateFormat('d. M. KK:mm').format(dataRow.WT!);
     }
 
     return TableRow(

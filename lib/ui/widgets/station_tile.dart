@@ -82,7 +82,7 @@ class StationTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Latest value from:\n${latestValue?.WT != null ? DateFormat('d. M. kk:mm').format(latestValue!.WT!) : ''}',
+                        'Latest value from:\n${latestValue?.WT != null ? DateFormat('d. M. KK:mm').format(latestValue!.WT!) : ''}',
                         style: const TextStyle(color: Colors.black),
                       ),
                       Text.rich(

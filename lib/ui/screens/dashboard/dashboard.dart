@@ -69,29 +69,34 @@ class _DashBoardScreenState extends State<DashBoardScreen>
         title: const Text('Dexcom Board'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 14.0),
             child: TimerBuilder.periodic(
               const Duration(seconds: 1),
               builder: (context) {
                 final now = DateTime.now();
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      DateFormat('KK:mm:ss').format(now),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: DateFormat('d. MMMM y    ').format(now),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                          TextSpan(
+                            text: DateFormat('KK:mm').format(now),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      DateFormat('d. M. ').format(now),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
+                    )
                   ],
                 );
               },
