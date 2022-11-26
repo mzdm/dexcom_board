@@ -74,7 +74,7 @@ class _DashBoardScreenState extends State<DashBoardScreen>
                   if (stations == null) return const SizedBox.shrink();
                   return GridView.count(
                     primary: false,
-                    crossAxisCount: 4,
+                    crossAxisCount: getCrossAxisCount(context),
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     childAspectRatio: 1.2,
@@ -114,5 +114,19 @@ class _DashBoardScreenState extends State<DashBoardScreen>
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  int getCrossAxisCount(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    if (width > 1450) {
+      return 4;
+    } else if (width > 1100) {
+      return 3;
+    } else if (width > 600) {
+      return 2;
+    } else {
+      return 1;
+    }
   }
 }
