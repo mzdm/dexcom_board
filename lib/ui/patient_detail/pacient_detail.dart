@@ -6,9 +6,7 @@ import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/services/time_refresh_service.dart';
 import 'package:dexcom_board/ui/widgets/line_chart_widget.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
-import 'package:dexcom_share_api/dexcom_share_api.dart';
 import 'package:flutter/material.dart';
-import 'package:sembast/sembast.dart';
 
 class PatientDetailScreen extends StatelessWidget {
   const PatientDetailScreen({
@@ -57,54 +55,52 @@ class PatientDetailScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                LineChartWidget(),
-                StreamBuilder<GlucoseListEventRecords>(
-                  stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
-                  builder: (context, snapshot) {
-                    final data = snapshot.data?.eventRecords;
-                    if (data == null) {
-                      return const SizedBox.shrink();
-                    } else {
-                      return ListView.builder(
-                        itemCount: data.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final item = data[index];
-                          return ListTile(
-                            title: Text('Item ${item.toString()} ${item.Trend?.trendArrow}'),
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-                // FutureBuilder(
-                //   future: _get(),
-                //   builder: (context, snapshot) {
-                //     final data = snapshot.data;
-                //     if (snapshot.hasError) {
-                //       return Text('Error: ${snapshot.error}');
-                //     }
-                //     if (data == null) {
-                //       return const SizedBox.shrink();
-                //     } else {
-                //       return ListView.builder(
-                //         itemCount: data.length,
-                //         shrinkWrap: true,
-                //         itemBuilder: (context, index) {
-                //           final item = data[index];
-                //           return ListTile(
-                //             title: Text('Item ${item.toString()} ${item.Trend?.trendArrow}'),
-                //           );
-                //         },
-                //       );
-                //     }
-                //   },
-                // ),
-              ],
-            ),
+            child: StreamBuilder<GlucoseListEventRecords>(
+                stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
+                builder: (context, snapshot) {
+                  final allData = snapshot.data?.eventRecords;
+                  return Column(
+                    children: [
+                      LineChartWidget(data: allData),
+                      if (allData == null)
+                        Text('No data found.')
+                      else
+                        ListView.builder(
+                          itemCount: allData.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final item = allData[index];
+                            return ListTile(
+                              title: Text('Item ${item.toString()} ${item.Trend?.trendArrow}'),
+                            );
+                          },
+                        ),
+                      // FutureBuilder(
+                      //   future: _get(),
+                      //   builder: (context, snapshot) {
+                      //     final data = snapshot.data;
+                      //     if (snapshot.hasError) {
+                      //       return Text('Error: ${snapshot.error}');
+                      //     }
+                      //     if (data == null) {
+                      //       return const SizedBox.shrink();
+                      //     } else {
+                      //       return ListView.builder(
+                      //         itemCount: data.length,
+                      //         shrinkWrap: true,
+                      //         itemBuilder: (context, index) {
+                      //           final item = data[index];
+                      //           return ListTile(
+                      //             title: Text('Item ${item.toString()} ${item.Trend?.trendArrow}'),
+                      //           );
+                      //         },
+                      //       );
+                      //     }
+                      //   },
+                      // ),
+                    ],
+                  );
+                }),
           ),
         ),
       ),

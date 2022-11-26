@@ -7,7 +7,6 @@ import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:dexcom_share_api/dexcom_share_api.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 
 const refreshInterval = 300;
 
@@ -43,7 +42,7 @@ class TimeRefreshService {
   Future<void> onRefresh() async {
     print('DEBUG_LOG: Should refresh data');
     final allStations = await stationModelDao.getAllStations();
-    return;// temporary disabled to not refresh data for now
+    return; // temporary disabled to not refresh data for now
     for (final entryStation in allStations.entries) {
       print('DEBUG_LOG: Refreshing station ${entryStation.key}');
       await refreshData(entryStation.key, entryStation.value);
