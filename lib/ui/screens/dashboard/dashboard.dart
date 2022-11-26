@@ -2,9 +2,8 @@ import 'package:dexcom_board/common.dart';
 import 'package:dexcom_board/services/models/app_models.dart';
 import 'package:dexcom_board/ui/widgets/add_station_dialog.dart';
 import 'package:dexcom_board/ui/widgets/station_tile.dart';
+import 'package:flextras/flextras.dart';
 import 'package:flutter/material.dart';
-
-const apiKey = String.fromEnvironment('FHIR_API_KEY');
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({super.key});
@@ -24,36 +23,70 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
       appBar: AppBar(
         title: const Text('Dexcom Board'),
       ),
-      body: StreamBuilder<Map<String, StationModel>>(
-        stream: stationModelDao.stationsStream,
-        builder: (context, snapshot) {
-          final stations = snapshot.data;
-          if (stations == null) return const SizedBox.shrink();
-          return GridView.count(
-            primary: false,
-            crossAxisCount: 4,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.2,
-            children: stations.entries
-                .map(
-                  (entry) => StationTile(
-                    stationId: entry.key,
-                    station: entry.value,
-                  ),
-                )
-                .toList(),
-            // children: [
-            //   ...List.generate(
-            //     10,
-            //     (index) => StationTile(
-            //       name: 'Station $index',
-            //       data: [],
-            //     ),
-            //   ),
-            // ],
-          );
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SeparatedRow(
+                  separatorBuilder: () => const SizedBox(width: 4.0),
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text('30min'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text('1h'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text('3h'),
+                    ),
+                  ],
+                ),
+                Text('Aktualizace dat za 3h'),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: StreamBuilder<Map<String, StationModel>>(
+                stream: stationModelDao.stationsStream,
+                builder: (context, snapshot) {
+                  final stations = snapshot.data;
+                  if (stations == null) return const SizedBox.shrink();
+                  return GridView.count(
+                    primary: false,
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1.2,
+                    children: stations.entries
+                        .map(
+                          (entry) => StationTile(
+                            stationId: entry.key,
+                            station: entry.value,
+                          ),
+                        )
+                        .toList(),
+                    // children: [
+                    //   ...List.generate(
+                    //     10,
+                    //     (index) => StationTile(
+                    //       name: 'Station $index',
+                    //       data: [],
+                    //     ),
+                    //   ),
+                    // ],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

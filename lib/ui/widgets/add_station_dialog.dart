@@ -65,19 +65,20 @@ mixin AddStationDialog on State<DashBoardScreen> {
                     username: username,
                     password: password,
                   );
-                  final client = DexcomUserApi();
-                  final response = await client.init(username: username, password: password);
-                  if (response.isRight) {
+                  // final client = DexcomUserApi();
+                  // final response = await client.init(username: username, password: password);
+                  if (true) {
+                    // if (response.isRight) {
                     final stationId = await stationModelDao.saveStation(station);
-                    activeUserDexClients.addStation(stationId, client);
+                    // activeUserDexClients.addStation(stationId, client);
                     await AutoRouter.of(context).pop();
                   } else {
-                    final error = response.left;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('An error occurred: ${error.message}'),
-                      ),
-                    );
+                    // final error = response.left;
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text('An error occurred: ${error.message}'),
+                    //   ),
+                    // );
                   }
                   await AutoRouter.of(context).pop();
                 } else {
