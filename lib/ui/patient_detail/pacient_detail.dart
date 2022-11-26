@@ -6,7 +6,9 @@ import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/services/time_refresh_service.dart';
 import 'package:dexcom_board/ui/widgets/line_chart_widget.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
+import 'package:dexcom_share_api/dexcom_models.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PatientDetailScreen extends StatelessWidget {
   const PatientDetailScreen({
@@ -18,13 +20,15 @@ class PatientDetailScreen extends StatelessWidget {
   final String stationId;
   final StationModel station;
 
-  ActiveUserDexClients get activeUserDexClients => locator.get<ActiveUserDexClients>();
+  ActiveUserDexClients get activeUserDexClients =>
+      locator.get<ActiveUserDexClients>();
 
   StationModelDao get stationModelDao => locator.get<StationModelDao>();
 
   TimeRefreshService get timerRefresher => locator.get<TimeRefreshService>();
 
-  GlucoseEventRecordsDao get glucoseEventRecordsDao => locator.get<GlucoseEventRecordsDao>();
+  GlucoseEventRecordsDao get glucoseEventRecordsDao =>
+      locator.get<GlucoseEventRecordsDao>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,44 +52,132 @@ class PatientDetailScreen extends StatelessWidget {
             onPressed: () async {
               activeUserDexClients.removeStation(stationId);
               await stationModelDao.deleteStation(stationId);
-              AutoRouter.of(context).pop();
+              await AutoRouter.of(context).pop();
             },
           ),
         ],
       ),
       body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: StreamBuilder<GlucoseListEventRecords>(
-              stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
-              builder: (context, snapshot) {
-                final allData = snapshot.data?.eventRecords;
-                return Column(
-                  children: [
-                    LineChartWidget(data: allData),
-                    if (allData == null)
-                      Text('No data found.')
-                    else
-                      ListView.builder(
-                        itemCount: allData.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final item = allData[index];
-                          return ListTile(
-                            title: Text(
-                              '${index + 1}. value ${item.glucoseValueEu ?? ''} (${item.WT ?? ''}) ${item.Trend?.trendArrow ?? ''}',
-                            ),
-                          );
-                        },
+        child: StreamBuilder<GlucoseListEventRecords>(
+          stream: glucoseEventRecordsDao
+              .getAllGlucoseListEventRecordsStream(stationId),
+          builder: (context, snapshot) {
+            final allData = snapshot.data?.eventRecords;
+
+            if (allData == null) return const Text('No data found.');
+
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return Row(
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth * 0.75,
+                        height: constraints.maxHeight,
+                        child: LineChartWidget(data: allData),
                       ),
-                  ],
-                );
-              },
-            ),
-          ),
+                      SizedBox(
+                        width: constraints.maxWidth * 0.25,
+                        height: constraints.maxHeight,
+                        child: SingleChildScrollView(
+                          child: Table(
+                            border: TableBorder.all(),
+                            columnWidths: const {
+                              0: FlexColumnWidth(),
+                              1: FlexColumnWidth(),
+                              2: FlexColumnWidth(),
+                            },
+                            children: [
+                              const TableRow(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text(
+                                      'Time',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text(
+                                      'Value',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text(
+                                      'Trend',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              for (var dataRow in allData) getTableRow(dataRow),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         ),
       ),
+    );
+  }
+
+  TableRow getTableRow(GlucoseEventRecord dataRow) {
+    String formattedDate = '';
+    if (dataRow.WT != null) {
+      formattedDate = DateFormat('dd. MM. kk:mm').format(dataRow.WT!);
+    }
+
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            formattedDate,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 15.0),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(
+            '${dataRow.glucoseValueEu}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 15.0),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(
+            '${dataRow.Trend?.trendArrow}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 15.0),
+          ),
+        ),
+      ],
     );
   }
 }
