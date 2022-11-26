@@ -19,7 +19,6 @@ class TimeRefreshService {
       if (t.tick % refreshInterval == 0) {
         await onRefresh();
       }
-      _actualDateTimeStreamController.add(DateTime.now());
     });
   }
 
@@ -41,11 +40,10 @@ class TimeRefreshService {
     return '$twoDigitMinutes:$twoDigitSeconds';
   }
 
-  final StreamController<DateTime> _actualDateTimeStreamController = StreamController.broadcast();
-
   Future<void> onRefresh() async {
     print('DEBUG_LOG: Should refresh data');
     final allStations = await stationModelDao.getAllStations();
+    return;// temporary disabled to not refresh data for now
     for (final entryStation in allStations.entries) {
       print('DEBUG_LOG: Refreshing station ${entryStation.key}');
       await refreshData(entryStation.key, entryStation.value);
