@@ -33,8 +33,7 @@ class StationTile extends StatelessWidget {
         return InkWell(
           onTap: () {
             AutoRouter.of(context).push(
-              PatientDetailRoute(stationId: stationId, station: station),
-            );
+                PatientDetailRoute(stationId: stationId, station: station));
           },
           child: Container(
             decoration: BoxDecoration(
@@ -48,9 +47,28 @@ class StationTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  station.stationName,
-                  style: const TextStyle(color: Colors.black, fontSize: 20),
+                // Text(station.stationName, style: TextStyle(color: Colors.black, fontSize: 20))
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          station.stationName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 20),
+                        ),
+                      ),
+                      Text(
+                        latestValue?.Trend?.trendArrow ?? '',
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                    ],
+                  ),
                 ),
                 IgnorePointer(
                   child: LineChartWidget(data: data, dotSize: 1),
@@ -83,9 +101,20 @@ class StationTile extends StatelessWidget {
                                 fontSize: 17,
                               ),
                             ),
+                            TextSpan(
+                              text:
+                                  '    ${latestValue?.Trend?.trendArrow ?? ''}',
+                              style: TextStyle(
+                                color: latestValue?.isCritical == true
+                                    ? Colors.redAccent
+                                    : Colors.black,
+                                fontSize: 15,
+                              ),
+                            ),
                           ],
                         ),
                       ),
+
                       // Text(
                       //   '${latestValue?.glucoseValueEu ?? ''}',
                       //   style: TextStyle(
