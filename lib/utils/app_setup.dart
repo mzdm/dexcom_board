@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dexcom_board/navigation/app_router.gr.dart';
+import 'package:dexcom_board/services/active_user_dex_clients.dart';
 import 'package:dexcom_board/services/db_service.dart';
 import 'package:dexcom_board/services/save_directories.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ Future<void> setup() async {
 
   locator.registerSingleton<AppRouter>(AppRouter());
 
+  locator.registerSingleton<ActiveUserDexClients>(ActiveUserDexClients());
   locator.registerSingleton<SaveDirectories>(SaveDirectories());
   await locator.get<SaveDirectories>().init();
   locator.registerSingleton<DatabaseService>(

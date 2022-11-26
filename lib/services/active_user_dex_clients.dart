@@ -1,0 +1,14 @@
+import 'package:dexcom_share_api/dexcom_share_api.dart';
+
+class ActiveUserDexClients {
+  // key is stationId
+  final activeUserDexClients = <String, DexcomUserApi>{};
+
+  bool containsStation(String stationId) {
+    return activeUserDexClients.containsKey(stationId);
+  }
+
+  void addStation(String stationId, DexcomUserApi client) {
+    activeUserDexClients[stationId] = client;
+  }
+}

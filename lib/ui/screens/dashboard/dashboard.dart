@@ -22,7 +22,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Dexcom Board'),
       ),
       body: StreamBuilder<List<StationModel>>(
         stream: stationModelDao.stationsStream,

@@ -1,4 +1,5 @@
 import 'package:dexcom_board/common.dart';
+import 'package:dexcom_board/services/active_user_dex_clients.dart';
 import 'package:dexcom_board/services/models/app_models.dart';
 import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/ui/screens/dashboard/dashboard.dart';
@@ -7,6 +8,8 @@ import 'package:dexcom_share_api/dexcom_http.dart';
 
 mixin AddStationDialog on State<DashBoardScreen> {
   StationModelDao get stationModelDao => locator<StationModelDao>();
+
+  ActiveUserDexClients get activeUserDexClients => locator<ActiveUserDexClients>();
 
   Future<void> displayStationDialog(
     BuildContext context, {
@@ -62,12 +65,20 @@ mixin AddStationDialog on State<DashBoardScreen> {
                     username: username,
                     password: password,
                   );
-                  // final client = DexcomUserApi();
-                  // final response = await client.init(username: username, password: password);
-                  // if (response.statusCode == 200) {
-                  //
-                  // }
-                  await stationModelDao.saveStation(station);
+                  final client = DexcomUserApi();
+                  final response = await client.init(username: username, password: password);
+                  if (response.isRight) {
+                    final stationId = await stationModelDao.saveStation(station);
+                    activeUserDexClients.addStation(stationId, client);
+                    await AutoRouter.of(context).pop();
+                  } else {
+                    final error = response.left;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('An error occurred: ${error.message}'),
+                      ),
+                    );
+                  }
                   await AutoRouter.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

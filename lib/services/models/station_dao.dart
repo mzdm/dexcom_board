@@ -21,9 +21,9 @@ class StationModelDao {
 
   static const _storeKeyName = 'station_models';
 
-  Future<void> saveStation(StationModel station) async {
+  Future<String> saveStation(StationModel station) async {
     final json = station.toJson();
-    await _store.add(_db, json);
+    return _store.add(_db, json);
   }
 
   Future<void> updateStation(String stationId, StationModel station) async {
