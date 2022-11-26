@@ -26,6 +26,34 @@ class _DashBoardScreenState extends State<DashBoardScreen>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final children2 = [
+      SeparatedRow(
+        separatorBuilder: () => const SizedBox(width: 4.0),
+        children: [
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('3h'),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('1h'),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('30min'),
+          ),
+        ],
+      ),
+      TimerBuilder.periodic(
+        const Duration(seconds: 1),
+        builder: (context) {
+          return Text(
+            'Aktualizace dat za: ${timeRefreshService.formatedTimeToRefresh}',
+          );
+        },
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dexcom Board'),
@@ -35,36 +63,16 @@ class _DashBoardScreenState extends State<DashBoardScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SeparatedRow(
-                  separatorBuilder: () => const SizedBox(width: 4.0),
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('3h'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('1h'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('30min'),
-                    ),
-                  ],
-                ),
-                TimerBuilder.periodic(
-                  const Duration(seconds: 1),
-                  builder: (context) {
-                    return Text(
-                      'Aktualizace dat za: ${timeRefreshService.formatedTimeToRefresh}',
-                    );
-                  },
-                ),
-              ],
-            ),
+            if (size.width > 600)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: children2,
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children2,
+              ),
             const SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<Map<String, StationModel>>(
@@ -89,9 +97,13 @@ class _DashBoardScreenState extends State<DashBoardScreen>
                     // children: [
                     //   ...List.generate(
                     //     10,
-                    //     (index) => StationTile(
-                    //       name: 'Station $index',
-                    //       data: [],
+                    //     (index) => const StationTile(
+                    //       stationId: 'entry.key',
+                    //       station: StationModel(
+                    //         stationName: 'Station name',
+                    //         username: '',
+                    //         password: '',
+                    //       ),
                     //     ),
                     //   ),
                     // ],
