@@ -15,12 +15,14 @@ class DashBoardScreen extends StatefulWidget {
   State<DashBoardScreen> createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog {
+class _DashBoardScreenState extends State<DashBoardScreen>
+    with AddStationDialog {
   final TextEditingController stationNameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  TimeRefreshService get timeRefreshService => locator<TimeRefreshService>();
+  TimeRefreshService get timeRefreshService =>
+      locator.get<TimeRefreshService>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +43,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
                   children: [
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text('30min'),
+                      child: const Text('3h'),
                     ),
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text('1h'),
+                      child: const Text('1h'),
                     ),
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text('3h'),
+                      child: const Text('30min'),
                     ),
                   ],
                 ),
                 TimerBuilder.periodic(
                   const Duration(seconds: 1),
                   builder: (context) {
-                    final elapsed = timeRefreshService.timer.tick;
-                    return Text('Aktualizace dat za: ${elapsed}');
+                    return Text(
+                      'Aktualizace dat za: ${timeRefreshService.formatedTimeToRefresh}',
+                    );
                   },
                 ),
               ],
