@@ -35,6 +35,13 @@ class StationModelDao {
     await _store.record(stationId).delete(_db);
   }
 
+  Future<Map<String, StationModel>> getAllStations() async {
+    final records = await _store.find(_db);
+    final entries =
+        records.map((record) => MapEntry(record.key, StationModel.fromJson(record.value)));
+    return Map.fromEntries(entries);
+  }
+
   Stream<Map<String, StationModel>> get stationsStream {
     final entries = _store.query().onSnapshots(_db).map((snapshot) =>
         snapshot.map((record) => MapEntry(record.key, StationModel.fromJson(record.value))));

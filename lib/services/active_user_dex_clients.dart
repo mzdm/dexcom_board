@@ -1,7 +1,10 @@
 import 'package:dexcom_board/services/models/app_models.dart';
+import 'package:dexcom_board/services/models/glucose_event_records_dao.dart';
 import 'package:dexcom_share_api/dexcom_share_api.dart';
 
 class ActiveUserDexClients {
+  ActiveUserDexClients();
+
   // key is stationId
   final activeUserDexClients = <String, DexcomUserApi>{};
 
