@@ -60,7 +60,7 @@ class GlucoseEventRecord with _$GlucoseEventRecord {
 
   const GlucoseEventRecord._();
 
-  double? get glucoseValueEu => Value == null ? null : Value! / 18;
+  double? get glucoseValueEu => Value == null ? null : double.parse((Value! / 18).toStringAsFixed(1));
 
   factory GlucoseEventRecord.fromJson(Map<String, Object?> json) =>
       _$GlucoseEventRecordFromJson(json);
