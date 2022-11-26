@@ -38,7 +38,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
     final children2 = [
       Consumer<GlucoseRangeProvider>(
         builder: (_, data, __) {
-          print('Changed to ${data.currFilter}');
           return SeparatedRow(
             separatorBuilder: () => const SizedBox(width: 4.0),
             children: [
@@ -94,27 +93,27 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     childAspectRatio: 1.2,
-                    children: stations.entries
-                        .map(
-                          (entry) => StationTile(
-                            stationId: entry.key,
-                            station: entry.value,
-                          ),
-                        )
-                        .toList(),
-                    // children: [
-                    //   ...List.generate(
-                    //     10,
-                    //     (index) => const StationTile(
-                    //       stationId: 'entry.key',
-                    //       station: StationModel(
-                    //         stationName: 'Station name',
-                    //         username: '',
-                    //         password: '',
+                    // children: stations.entries
+                    //     .map(
+                    //       (entry) => StationTile(
+                    //         stationId: entry.key,
+                    //         station: entry.value,
                     //       ),
-                    //     ),
-                    //   ),
-                    // ],
+                    //     )
+                    //     .toList(),
+                    children: [
+                      ...List.generate(
+                        10,
+                        (index) => const StationTile(
+                          stationId: 'entry.key',
+                          station: StationModel(
+                            stationName: 'Station name',
+                            username: '',
+                            password: '',
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
