@@ -44,11 +44,14 @@ class LineChartWidget extends StatelessWidget {
   LineChartWidget({
     super.key,
     required List<GlucoseEventRecord>? data,
+    this.dotSize = 2.8,
   }) {
     filteredData = data.filterByDateRange();
   }
 
   late final Map<DateTime, GlucoseEventRecord?> filteredData;
+
+  final double dotSize;
 
   static const List<Color> gradientColors = [
     const Color(0xff23b6e6),
@@ -158,7 +161,7 @@ class LineChartWidget extends StatelessWidget {
           dotData: FlDotData(
             show: true,
             getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
-              radius: 2.8,
+              radius: dotSize,
               color: Theme.of(context).primaryColor,
               strokeColor: Theme.of(context).primaryColor,
             ),
@@ -214,7 +217,7 @@ class LineChartWidget extends StatelessWidget {
               FlLine(color: Theme.of(context).primaryColor, strokeWidth: 3),
               FlDotData(
                 getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
-                  radius: 8,
+                  radius: dotSize,
                   color: Theme.of(context).primaryColor,
                   strokeWidth: 0,
                 ),

@@ -18,11 +18,11 @@ class PatientDetailScreen extends StatelessWidget {
   final String stationId;
   final StationModel station;
 
-  ActiveUserDexClients get activeUserDexClients => locator<ActiveUserDexClients>();
+  ActiveUserDexClients get activeUserDexClients => locator.get<ActiveUserDexClients>();
 
-  StationModelDao get stationModelDao => locator<StationModelDao>();
+  StationModelDao get stationModelDao => locator.get<StationModelDao>();
 
-  TimeRefreshService get timerRefresher => locator<TimeRefreshService>();
+  TimeRefreshService get timerRefresher => locator.get<TimeRefreshService>();
 
   GlucoseEventRecordsDao get glucoseEventRecordsDao => locator.get<GlucoseEventRecordsDao>();
 
@@ -72,7 +72,7 @@ class PatientDetailScreen extends StatelessWidget {
                           final item = allData[index];
                           return ListTile(
                             title: Text(
-                              '${index + 1}. hodnota ${item.glucoseValueEu ?? ''} (${item.WT ?? ''}) ${item.Trend?.trendArrow ?? ''}',
+                              '${index + 1}. value ${item.glucoseValueEu ?? ''} (${item.WT ?? ''}) ${item.Trend?.trendArrow ?? ''}',
                             ),
                           );
                         },

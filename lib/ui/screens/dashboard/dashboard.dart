@@ -49,7 +49,7 @@ class _DashBoardScreenState extends State<DashBoardScreen>
         const Duration(seconds: 1),
         builder: (context) {
           return Text(
-            'Aktualizace dat za: ${timeRefreshService.formatedTimeToRefresh}',
+            'Next data update: ${timeRefreshService.formatedTimeToRefresh}',
           );
         },
       ),
