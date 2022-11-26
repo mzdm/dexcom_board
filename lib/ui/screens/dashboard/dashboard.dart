@@ -17,12 +17,14 @@ class DashBoardScreen extends StatefulWidget {
   State<DashBoardScreen> createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog {
+class _DashBoardScreenState extends State<DashBoardScreen>
+    with AddStationDialog {
   final TextEditingController stationNameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  TimeRefreshService get timeRefreshService => locator.get<TimeRefreshService>();
+  TimeRefreshService get timeRefreshService =>
+      locator.get<TimeRefreshService>();
 
   late final GlucoseRangeProvider glucoseRangeProvider;
 
@@ -53,7 +55,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
         builder: (context) {
           return Text(
             'Next data update: ${timeRefreshService.formatedTimeToRefresh}',
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 20,
             ),
@@ -135,7 +137,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
     );
   }
 
-  Widget _buildTextButton(BuildContext context, GlucoseRangeFilter glucoseRangeFilter) {
+  Widget _buildTextButton(
+      BuildContext context, GlucoseRangeFilter glucoseRangeFilter) {
     const selectedTextStyle = TextStyle(color: Colors.white);
     return TextButton(
       onPressed: () {
@@ -148,7 +151,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
       ),
       child: Text(
         glucoseRangeFilter.getLabel(),
-        style: glucoseRangeProvider.isSelected(glucoseRangeFilter) ? selectedTextStyle : null,
+        style: glucoseRangeProvider.isSelected(glucoseRangeFilter)
+            ? selectedTextStyle
+            : null,
       ),
     );
   }

@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 const maxY = 22;
 
 extension MoodChartFilterExt on Iterable<GlucoseEventRecord>? {
-  Map<DateTime, GlucoseEventRecord?> filterByDateRange(GlucoseRangeFilter rangeFilter) {
+  Map<DateTime, GlucoseEventRecord?> filterByDateRange(
+    GlucoseRangeFilter rangeFilter,
+  ) {
     final allValuesMap = this == null
         ? <DateTime, GlucoseEventRecord?>{}
         : <DateTime, GlucoseEventRecord?>{
@@ -25,7 +27,12 @@ extension MoodChartFilterExt on Iterable<GlucoseEventRecord>? {
 
     final now = DateTime.now();
     final start = DateTime(
-        now.year, now.month, now.day, now.hour, now.minute - rangeFilter.getShiftInMinutes());
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute - rangeFilter.getShiftInMinutes(),
+    );
     final end = DateTime(now.year, now.month, now.day, now.hour, now.minute);
 
     final dateRangeValues = List.generate(
@@ -48,7 +55,7 @@ class LineChartWidget extends StatelessWidget {
     super.key,
     required this.data,
     this.dotSize = 2.8,
-    this.bottomLabelSize = 16.0,
+    this.bottomLabelSize = 10.0,
   });
 
   final List<GlucoseEventRecord>? data;
@@ -57,14 +64,15 @@ class LineChartWidget extends StatelessWidget {
   final double dotSize;
 
   static const List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
+    Color(0xff23b6e6),
+    Color(0xff02d39a),
   ];
 
   @override
   Widget build(BuildContext context) {
     final currFilter = context.watch<GlucoseRangeProvider>().currFilter;
-    final Map<DateTime, GlucoseEventRecord?> filteredData = data.filterByDateRange(currFilter);
+    final Map<DateTime, GlucoseEventRecord?> filteredData =
+        data.filterByDateRange(currFilter);
 
     return Padding(
       padding: const EdgeInsets.all(25.0),
@@ -72,7 +80,7 @@ class LineChartWidget extends StatelessWidget {
         aspectRatio: 1.70,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(18),
             ),
             color: Theme.of(context).primaryColor.withOpacity(0.05),
@@ -85,7 +93,11 @@ class LineChartWidget extends StatelessWidget {
               bottom: 12,
             ),
             child: LineChart(
-              mainData(context, filteredData, currFilter),
+              mainData(
+                context,
+                filteredData,
+                currFilter,
+              ),
             ),
           ),
         ),
@@ -112,9 +124,7 @@ class LineChartWidget extends StatelessWidget {
       axisSide: meta.axisSide,
       child: shouldShow
           ? Text(
-              entry.key.hour.toString().padLeft(2, '0') +
-                  ':' +
-                  entry.key.minute.toString().padLeft(2, '0'),
+              '${entry.key.hour.toString().padLeft(2, '0')}:${entry.key.minute.toString().padLeft(2, '0')}',
               style: style,
             )
           : const SizedBox.shrink(),
@@ -137,7 +147,9 @@ class LineChartWidget extends StatelessWidget {
           spots: filteredData.entries
               .mapIndexed((i, e) {
                 final event = e.value;
-                return event == null ? null : FlSpot(i.toDouble(), e.value!.glucoseValueEu!);
+                return event == null
+                    ? null
+                    : FlSpot(i.toDouble(), e.value!.glucoseValueEu!);
               })
               .whereType<FlSpot>()
               .toList(),
