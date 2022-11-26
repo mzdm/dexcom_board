@@ -20,13 +20,15 @@ class PatientDetailScreen extends StatelessWidget {
   final String stationId;
   final StationModel station;
 
-  ActiveUserDexClients get activeUserDexClients => locator.get<ActiveUserDexClients>();
+  ActiveUserDexClients get activeUserDexClients =>
+      locator.get<ActiveUserDexClients>();
 
   StationModelDao get stationModelDao => locator.get<StationModelDao>();
 
   TimeRefreshService get timerRefresher => locator.get<TimeRefreshService>();
 
-  GlucoseEventRecordsDao get glucoseEventRecordsDao => locator.get<GlucoseEventRecordsDao>();
+  GlucoseEventRecordsDao get glucoseEventRecordsDao =>
+      locator.get<GlucoseEventRecordsDao>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,8 @@ class PatientDetailScreen extends StatelessWidget {
       ),
       body: Center(
         child: StreamBuilder<GlucoseListEventRecords>(
-          stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
+          stream: glucoseEventRecordsDao
+              .getAllGlucoseListEventRecordsStream(stationId),
           builder: (context, snapshot) {
             final allData = snapshot.data?.eventRecords;
 
@@ -67,75 +70,92 @@ class PatientDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  return Row(
-                    children: [
-                      SizedBox(
-                        width: constraints.maxWidth * 0.75,
-                        height: constraints.maxHeight,
-                        child: LineChartWidget(data: allData),
-                      ),
-                      SizedBox(
-                        width: constraints.maxWidth * 0.25,
-                        height: constraints.maxHeight,
-                        child: SingleChildScrollView(
-                          child: Table(
-                            border: TableBorder.all(),
-                            columnWidths: const {
-                              0: FlexColumnWidth(),
-                              1: FlexColumnWidth(),
-                              2: FlexColumnWidth(),
-                            },
-                            children: [
-                              const TableRow(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Text(
-                                      'Time',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Text(
-                                      'Value',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Text(
-                                      'Trend',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              for (var dataRow in allData) getTableRow(dataRow),
-                            ],
-                          ),
+                  if (MediaQuery.of(context).size.width > 600) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                          width: constraints.maxWidth * 0.75,
+                          height: constraints.maxHeight,
+                          child: LineChartWidget(data: allData),
                         ),
-                      ),
-                    ],
-                  );
+                        SizedBox(
+                          width: constraints.maxWidth * 0.25,
+                          height: constraints.maxHeight,
+                          child: getValuesListWidget(allData),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return ListView(
+                      primary: true,
+                      children: [
+                        LineChartWidget(data: allData),
+                        getValuesListWidget(allData),
+                      ],
+                    );
+                  }
                 },
               ),
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget getValuesListWidget(List<GlucoseEventRecord> allData) {
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        Table(
+          border: TableBorder.all(),
+          columnWidths: const {
+            0: FlexColumnWidth(),
+            1: FlexColumnWidth(),
+            2: FlexColumnWidth(),
+          },
+          children: [
+            const TableRow(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Time',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Value',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'Trend',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            for (var dataRow in allData) getTableRow(dataRow),
+          ],
+        ),
+      ],
     );
   }
 
