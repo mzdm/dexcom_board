@@ -26,6 +26,17 @@ enum GlucoseRangeFilter {
         return 30;
     }
   }
+
+  bool minutesRemainderBottomLabel(DateTime value) {
+    switch (this) {
+      case GlucoseRangeFilter.threeHours:
+        return value.minute % 30 == 0;
+      case GlucoseRangeFilter.oneHour:
+        return value.minute % 10 == 0;
+      case GlucoseRangeFilter.thirtyMinutes:
+        return value.minute % 5 == 0;
+    }
+  }
 }
 
 class GlucoseRangeProvider extends ChangeNotifier {

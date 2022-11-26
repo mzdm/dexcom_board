@@ -37,7 +37,7 @@ class StationTile extends StatelessWidget {
                 children: [
                   Text(station.stationName, style: TextStyle(color: Colors.black)),
                   IgnorePointer(
-                    child: LineChartWidget(data: data, dotSize: 1),
+                    child: LineChartWidget(data: data, dotSize: 1, bottomLabelSize: 10),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),

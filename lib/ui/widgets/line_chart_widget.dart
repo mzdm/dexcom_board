@@ -48,10 +48,12 @@ class LineChartWidget extends StatelessWidget {
     super.key,
     required this.data,
     this.dotSize = 2.8,
+    this.bottomLabelSize = 16.0,
   });
 
   final List<GlucoseEventRecord>? data;
 
+  final double bottomLabelSize;
   final double dotSize;
 
   static const List<Color> gradientColors = [
@@ -83,7 +85,7 @@ class LineChartWidget extends StatelessWidget {
               bottom: 12,
             ),
             child: LineChart(
-              mainData(context, filteredData),
+              mainData(context, filteredData, currFilter),
             ),
           ),
         ),
@@ -91,59 +93,40 @@ class LineChartWidget extends StatelessWidget {
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
+  Widget bottomTitleWidgets(
+    double value,
+    TitleMeta meta,
+    Map<DateTime, GlucoseEventRecord?> filteredData,
+    GlucoseRangeFilter currFilter,
+  ) {
+    final style = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: bottomLabelSize,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
+
+    final entry = filteredData.entries.elementAt(value.toInt());
+    print(entry);
+    final shouldShow = currFilter.minutesRemainderBottomLabel(entry.key);
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: text,
+      child: shouldShow
+          ? Text(
+              entry.key.hour.toString().padLeft(2, '0') +
+                  ':' +
+                  entry.key.minute.toString().padLeft(2, '0'),
+              style: style,
+            )
+          : const SizedBox.shrink(),
     );
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  LineChartData mainData(BuildContext context, Map<DateTime, GlucoseEventRecord?> filteredData) {
+  LineChartData mainData(
+    BuildContext context,
+    Map<DateTime, GlucoseEventRecord?> filteredData,
+    GlucoseRangeFilter currFilter,
+  ) {
     return LineChartData(
       borderData: FlBorderData(show: false),
       minX: 0,
@@ -195,7 +178,10 @@ class LineChartWidget extends StatelessWidget {
         show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            showTitles: false,
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: (value, meta) =>
+                bottomTitleWidgets(value, meta, filteredData, currFilter),
           ),
         ),
         leftTitles: AxisTitles(
