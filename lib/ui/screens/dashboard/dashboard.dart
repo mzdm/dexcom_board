@@ -1,5 +1,6 @@
 import 'package:dexcom_board/common.dart';
 import 'package:dexcom_board/navigation/app_router.gr.dart';
+import 'package:dexcom_board/ui/widgets/station_tile.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardScreen extends StatelessWidget {
@@ -12,17 +13,20 @@ class DashBoardScreen extends StatelessWidget {
         title: const Text('Dashboard'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () async {
-                //
-                // final client = DexcomUserApi();
-                // await client.init(username: 'ffd', password: 'fddf');
-                context.pushRoute(const PatientDetailRoute());
-              },
-              child: Text('Glucose'),
+        child: GridView.count(
+          // shrinkWrap: true,
+          primary: false,
+          crossAxisCount: 4,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.2,
+          children: [
+            ...List.generate(
+              10,
+              (index) => StationTile(
+                name: 'Station $index',
+                data: [],
+              ),
             ),
           ],
         ),
