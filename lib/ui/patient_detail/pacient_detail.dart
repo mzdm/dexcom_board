@@ -20,15 +20,13 @@ class PatientDetailScreen extends StatelessWidget {
   final String stationId;
   final StationModel station;
 
-  ActiveUserDexClients get activeUserDexClients =>
-      locator.get<ActiveUserDexClients>();
+  ActiveUserDexClients get activeUserDexClients => locator.get<ActiveUserDexClients>();
 
   StationModelDao get stationModelDao => locator.get<StationModelDao>();
 
   TimeRefreshService get timerRefresher => locator.get<TimeRefreshService>();
 
-  GlucoseEventRecordsDao get glucoseEventRecordsDao =>
-      locator.get<GlucoseEventRecordsDao>();
+  GlucoseEventRecordsDao get glucoseEventRecordsDao => locator.get<GlucoseEventRecordsDao>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +57,7 @@ class PatientDetailScreen extends StatelessWidget {
       ),
       body: Center(
         child: StreamBuilder<GlucoseListEventRecords>(
-          stream: glucoseEventRecordsDao
-              .getAllGlucoseListEventRecordsStream(stationId),
+          stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
           builder: (context, snapshot) {
             final allData = snapshot.data?.eventRecords;
 
@@ -92,8 +89,7 @@ class PatientDetailScreen extends StatelessWidget {
                               const TableRow(
                                 children: [
                                   Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.symmetric(vertical: 8.0),
                                     child: Text(
                                       'Time',
                                       textAlign: TextAlign.center,
@@ -104,8 +100,7 @@ class PatientDetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.symmetric(vertical: 8.0),
                                     child: Text(
                                       'Value',
                                       textAlign: TextAlign.center,
@@ -116,8 +111,7 @@ class PatientDetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.symmetric(vertical: 8.0),
                                     child: Text(
                                       'Trend',
                                       textAlign: TextAlign.center,
@@ -148,7 +142,7 @@ class PatientDetailScreen extends StatelessWidget {
   TableRow getTableRow(GlucoseEventRecord dataRow) {
     String formattedDate = '';
     if (dataRow.WT != null) {
-      formattedDate = DateFormat('dd. MM. kk:mm').format(dataRow.WT!);
+      formattedDate = DateFormat('d. M. kk:mm').format(dataRow.WT!);
     }
 
     return TableRow(

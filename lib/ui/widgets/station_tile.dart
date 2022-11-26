@@ -6,6 +6,7 @@ import 'package:dexcom_board/services/models/glucose_event_records_dao.dart';
 import 'package:dexcom_board/ui/widgets/line_chart_widget.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class StationTile extends StatelessWidget {
   const StationTile({
@@ -21,21 +22,29 @@ class StationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        AutoRouter.of(context).push(PatientDetailRoute(stationId: stationId, station: station));
-      },
-      child: Container(
-        color: Theme.of(context).secondaryHeaderColor,
-        child: StreamBuilder<GlucoseListEventRecords>(
-            stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
-            builder: (context, snapshot) {
-              final data = snapshot.data?.eventRecords;
-              final latestValue = data?.firstOrNull;
-              return Column(
+    return StreamBuilder<GlucoseListEventRecords>(
+        stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
+        builder: (context, snapshot) {
+          final data = snapshot.data?.eventRecords;
+          final latestValue = data?.firstOrNull;
+          return InkWell(
+            onTap: () {
+              AutoRouter.of(context)
+                  .push(PatientDetailRoute(stationId: stationId, station: station));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: latestValue?.isCritical == true ? Colors.redAccent : Colors.transparent,
+                  width: 4,
+                ),
+                borderRadius: BorderRadius.circular(6),
+                color: Theme.of(context).secondaryHeaderColor,
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(station.stationName, style: TextStyle(color: Colors.black)),
+                  Text(station.stationName, style: TextStyle(color: Colors.black, fontSize: 20)),
                   IgnorePointer(
                     child: LineChartWidget(data: data, dotSize: 1, bottomLabelSize: 10),
                   ),
@@ -45,20 +54,45 @@ class StationTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Latest value: ${latestValue?.WT ?? ''}',
+                          'Latest value from:\n${latestValue?.WT != null ? DateFormat('d. M. kk:mm').format(latestValue!.WT!) : ''}',
                           style: TextStyle(color: Colors.black),
                         ),
-                        Text(
-                          '${latestValue?.glucoseValueEu ?? ''}',
-                          style: TextStyle(color: Colors.black, fontSize: 35),
+                        Text.rich(
+                          TextSpan(
+                            text: '${latestValue?.glucoseValueEu ?? ''}',
+                            style: TextStyle(
+                              color:
+                                  latestValue?.isCritical == true ? Colors.redAccent : Colors.black,
+                              fontSize: 35,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' mmol/L',
+                                style: TextStyle(
+                                  color: latestValue?.isCritical == true
+                                      ? Colors.redAccent
+                                      : Colors.black,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        // Text(
+                        //   '${latestValue?.glucoseValueEu ?? ''}',
+                        //   style: TextStyle(
+                        //     color:
+                        //         latestValue?.isCritical == true ? Colors.redAccent : Colors.black,
+                        //     fontSize: 35,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
                 ],
-              );
-            }),
-      ),
-    );
+              ),
+            ),
+          );
+        });
   }
 }

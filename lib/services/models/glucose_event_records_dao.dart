@@ -29,7 +29,6 @@ class GlucoseEventRecordsDao {
   ) async {
     try {
       final json = GlucoseListEventRecords(eventRecords: glucoseListEventRecords).toJson();
-      print('saving: $json');
       await store.record(id).put(db, json);
     } catch (e) {
       print('failed $e');

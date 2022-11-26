@@ -200,6 +200,9 @@ class LineChartWidget extends StatelessWidget {
       ),
       lineTouchData: LineTouchData(
         getTouchLineEnd: (_, __) => double.infinity,
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.white,
+        ),
         getTouchedSpotIndicator: (_, spotIndexes) {
           return spotIndexes.map((spotIndex) {
             return TouchedSpotIndicatorData(

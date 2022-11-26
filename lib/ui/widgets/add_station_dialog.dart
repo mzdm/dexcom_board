@@ -2,6 +2,7 @@ import 'package:dexcom_board/common.dart';
 import 'package:dexcom_board/services/active_user_dex_clients.dart';
 import 'package:dexcom_board/services/models/app_models.dart';
 import 'package:dexcom_board/services/models/station_dao.dart';
+import 'package:dexcom_board/services/time_refresh_service.dart';
 import 'package:dexcom_board/ui/screens/dashboard/dashboard.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:dexcom_share_api/dexcom_http.dart';
@@ -10,6 +11,8 @@ mixin AddStationDialog on State<DashBoardScreen> {
   StationModelDao get stationModelDao => locator<StationModelDao>();
 
   ActiveUserDexClients get activeUserDexClients => locator<ActiveUserDexClients>();
+
+  TimeRefreshService get timerRefresher => locator.get<TimeRefreshService>();
 
   Future<void> displayStationDialog(
     BuildContext context, {
@@ -71,6 +74,7 @@ mixin AddStationDialog on State<DashBoardScreen> {
                     if (response.isRight) {
                     final stationId = await stationModelDao.saveStation(station);
                     activeUserDexClients.addStation(stationId, client);
+                    await timerRefresher.refreshData(stationId, station);
                     await AutoRouter.of(context).pop();
                   } else {
                     final error = response.left;

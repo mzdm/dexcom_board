@@ -14,7 +14,8 @@ class DatabaseService {
 
   Future<void> init() async {
     mainStore = StoreRef.main();
-    database = await databaseFactoryIo.openDatabase(
+
+    database =  await databaseFactoryIo.openDatabase(
       join(_saveDirectories.dbDirPath, _dbFileName),
       version: 1,
     );

@@ -64,6 +64,15 @@ class GlucoseEventRecord with _$GlucoseEventRecord {
 
   factory GlucoseEventRecord.fromJson(Map<String, Object?> json) =>
       _$GlucoseEventRecordFromJson(json);
+
+  bool get isCritical {
+    final glucoseValue = glucoseValueEu;
+    if (glucoseValue == null) {
+      return false;
+    }
+    // return glucoseValue <= 3.9 || glucoseValue > 0.2;
+    return glucoseValue <= 3.9 || glucoseValue > 22.2;
+  }
 }
 
 enum FutureTrend {
