@@ -31,10 +31,15 @@ class StationModelDao {
     await _store.record(stationId).put(_db, json);
   }
 
-  Stream<List<StationModel>> get stationsStream => _store
-      .query()
-      .onSnapshots(_db)
-      .map((snapshot) => snapshot.map((record) => StationModel.fromJson(record.value)).toList());
+  Future<void> deleteStation(String stationId) async {
+    await _store.record(stationId).delete(_db);
+  }
+
+  Stream<Map<String, StationModel>> get stationsStream {
+    final entries = _store.query().onSnapshots(_db).map((snapshot) =>
+        snapshot.map((record) => MapEntry(record.key, StationModel.fromJson(record.value))));
+    return entries.map((event) => Map.fromEntries(event));
+  }
 
   Future<void> clear() async {
     await _store.drop(_db);

@@ -24,7 +24,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
       appBar: AppBar(
         title: const Text('Dexcom Board'),
       ),
-      body: StreamBuilder<List<StationModel>>(
+      body: StreamBuilder<Map<String, StationModel>>(
         stream: stationModelDao.stationsStream,
         builder: (context, snapshot) {
           final stations = snapshot.data;
@@ -35,11 +35,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
             childAspectRatio: 1.2,
-            children: stations
+            children: stations.entries
                 .map(
-                  (s) => StationTile(
-                    name: 'Station ${s.stationName}',
-                    data: [],
+                  (entry) => StationTile(
+                    stationId: entry.key,
+                    station: entry.value,
                   ),
                 )
                 .toList(),
