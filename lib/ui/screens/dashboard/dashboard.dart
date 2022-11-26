@@ -1,4 +1,5 @@
 import 'package:dexcom_board/common.dart';
+import 'package:dexcom_board/services/models/app_models.dart';
 import 'package:dexcom_board/ui/widgets/add_station_dialog.dart';
 import 'package:dexcom_board/ui/widgets/station_tile.dart';
 import 'package:flutter/material.dart';
@@ -23,24 +24,36 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Center(
-        child: GridView.count(
-          // shrinkWrap: true,
-          primary: false,
-          crossAxisCount: 4,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.2,
-          children: [
-            ...List.generate(
-              10,
-              (index) => StationTile(
-                name: 'Station $index',
-                data: [],
-              ),
-            ),
-          ],
-        ),
+      body: StreamBuilder<List<StationModel>>(
+        stream: stationModelDao.stationsStream,
+        builder: (context, snapshot) {
+          final stations = snapshot.data;
+          if (stations == null) return const SizedBox.shrink();
+          return GridView.count(
+            primary: false,
+            crossAxisCount: 4,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.2,
+            children: stations
+                .map(
+                  (s) => StationTile(
+                    name: 'Station ${s.stationName}',
+                    data: [],
+                  ),
+                )
+                .toList(),
+            // children: [
+            //   ...List.generate(
+            //     10,
+            //     (index) => StationTile(
+            //       name: 'Station $index',
+            //       data: [],
+            //     ),
+            //   ),
+            // ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

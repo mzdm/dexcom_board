@@ -1,7 +1,13 @@
 import 'package:dexcom_board/common.dart';
+import 'package:dexcom_board/services/models/app_models.dart';
+import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/ui/screens/dashboard/dashboard.dart';
+import 'package:dexcom_board/utils/app_setup.dart';
+import 'package:dexcom_share_api/dexcom_http.dart';
 
 mixin AddStationDialog on State<DashBoardScreen> {
+  StationModelDao get stationModelDao => locator<StationModelDao>();
+
   Future<void> displayStationDialog(
     BuildContext context, {
     required TextEditingController stationNameController,
@@ -46,15 +52,27 @@ mixin AddStationDialog on State<DashBoardScreen> {
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
-              onPressed: () {
+              onPressed: () async {
                 final stationName = stationNameController.text;
                 final username = usernameController.text;
                 final password = passwordController.text;
                 if (stationName.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
-                  // Do something
-                  AutoRouter.of(context).pop();
+                  final station = StationModel(
+                    stationName: stationName,
+                    username: username,
+                    password: password,
+                  );
+                  // final client = DexcomUserApi();
+                  // final response = await client.init(username: username, password: password);
+                  // if (response.statusCode == 200) {
+                  //
+                  // }
+                  await stationModelDao.saveStation(station);
+                  await AutoRouter.of(context).pop();
                 } else {
-                  // Do something
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill all fields')),
+                  );
                 }
               },
             ),

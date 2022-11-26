@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/services/save_directories.dart';
 import 'package:path/path.dart';
 import 'package:sembast/sembast.dart';
@@ -16,6 +17,7 @@ class DatabaseService {
       join(_saveDirectories.dbDirPath, _dbFileName),
       version: 1,
     );
+    await StationModelDao(dbService: this).init();
   }
 
   final SaveDirectories _saveDirectories;
