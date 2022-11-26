@@ -192,3 +192,166 @@ abstract class _StationModel extends StationModel {
   _$$_StationModelCopyWith<_$_StationModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+GlucoseListEventRecords _$GlucoseListEventRecordsFromJson(
+    Map<String, dynamic> json) {
+  return _GlucoseListEventRecords.fromJson(json);
+}
+
+/// @nodoc
+mixin _$GlucoseListEventRecords {
+  @GlucoseEventRecordListConverter()
+  List<GlucoseEventRecord> get eventRecords =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $GlucoseListEventRecordsCopyWith<GlucoseListEventRecords> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GlucoseListEventRecordsCopyWith<$Res> {
+  factory $GlucoseListEventRecordsCopyWith(GlucoseListEventRecords value,
+          $Res Function(GlucoseListEventRecords) then) =
+      _$GlucoseListEventRecordsCopyWithImpl<$Res, GlucoseListEventRecords>;
+  @useResult
+  $Res call(
+      {@GlucoseEventRecordListConverter()
+          List<GlucoseEventRecord> eventRecords});
+}
+
+/// @nodoc
+class _$GlucoseListEventRecordsCopyWithImpl<$Res,
+        $Val extends GlucoseListEventRecords>
+    implements $GlucoseListEventRecordsCopyWith<$Res> {
+  _$GlucoseListEventRecordsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? eventRecords = null,
+  }) {
+    return _then(_value.copyWith(
+      eventRecords: null == eventRecords
+          ? _value.eventRecords
+          : eventRecords // ignore: cast_nullable_to_non_nullable
+              as List<GlucoseEventRecord>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_GlucoseListEventRecordsCopyWith<$Res>
+    implements $GlucoseListEventRecordsCopyWith<$Res> {
+  factory _$$_GlucoseListEventRecordsCopyWith(_$_GlucoseListEventRecords value,
+          $Res Function(_$_GlucoseListEventRecords) then) =
+      __$$_GlucoseListEventRecordsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@GlucoseEventRecordListConverter()
+          List<GlucoseEventRecord> eventRecords});
+}
+
+/// @nodoc
+class __$$_GlucoseListEventRecordsCopyWithImpl<$Res>
+    extends _$GlucoseListEventRecordsCopyWithImpl<$Res,
+        _$_GlucoseListEventRecords>
+    implements _$$_GlucoseListEventRecordsCopyWith<$Res> {
+  __$$_GlucoseListEventRecordsCopyWithImpl(_$_GlucoseListEventRecords _value,
+      $Res Function(_$_GlucoseListEventRecords) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? eventRecords = null,
+  }) {
+    return _then(_$_GlucoseListEventRecords(
+      eventRecords: null == eventRecords
+          ? _value._eventRecords
+          : eventRecords // ignore: cast_nullable_to_non_nullable
+              as List<GlucoseEventRecord>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_GlucoseListEventRecords extends _GlucoseListEventRecords {
+  const _$_GlucoseListEventRecords(
+      {@GlucoseEventRecordListConverter()
+          required final List<GlucoseEventRecord> eventRecords})
+      : _eventRecords = eventRecords,
+        super._();
+
+  factory _$_GlucoseListEventRecords.fromJson(Map<String, dynamic> json) =>
+      _$$_GlucoseListEventRecordsFromJson(json);
+
+  final List<GlucoseEventRecord> _eventRecords;
+  @override
+  @GlucoseEventRecordListConverter()
+  List<GlucoseEventRecord> get eventRecords {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_eventRecords);
+  }
+
+  @override
+  String toString() {
+    return 'GlucoseListEventRecords(eventRecords: $eventRecords)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_GlucoseListEventRecords &&
+            const DeepCollectionEquality()
+                .equals(other._eventRecords, _eventRecords));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_eventRecords));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_GlucoseListEventRecordsCopyWith<_$_GlucoseListEventRecords>
+      get copyWith =>
+          __$$_GlucoseListEventRecordsCopyWithImpl<_$_GlucoseListEventRecords>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_GlucoseListEventRecordsToJson(
+      this,
+    );
+  }
+}
+
+abstract class _GlucoseListEventRecords extends GlucoseListEventRecords {
+  const factory _GlucoseListEventRecords(
+          {@GlucoseEventRecordListConverter()
+              required final List<GlucoseEventRecord> eventRecords}) =
+      _$_GlucoseListEventRecords;
+  const _GlucoseListEventRecords._() : super._();
+
+  factory _GlucoseListEventRecords.fromJson(Map<String, dynamic> json) =
+      _$_GlucoseListEventRecords.fromJson;
+
+  @override
+  @GlucoseEventRecordListConverter()
+  List<GlucoseEventRecord> get eventRecords;
+  @override
+  @JsonKey(ignore: true)
+  _$$_GlucoseListEventRecordsCopyWith<_$_GlucoseListEventRecords>
+      get copyWith => throw _privateConstructorUsedError;
+}

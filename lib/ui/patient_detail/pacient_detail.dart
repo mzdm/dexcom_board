@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dexcom_board/services/active_user_dex_clients.dart';
 import 'package:dexcom_board/services/models/app_models.dart';
+import 'package:dexcom_board/services/models/glucose_event_records_dao.dart';
 import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/ui/widgets/line_chart_widget.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:dexcom_share_api/dexcom_share_api.dart';
 import 'package:flutter/material.dart';
+import 'package:sembast/sembast.dart';
 
 class PatientDetailScreen extends StatelessWidget {
   const PatientDetailScreen({
@@ -21,22 +23,28 @@ class PatientDetailScreen extends StatelessWidget {
 
   StationModelDao get stationModelDao => locator<StationModelDao>();
 
+  GlucoseEventRecordsDao get glucoseEventRecordsDao => locator.get<GlucoseEventRecordsDao>();
+
   Future<List<GlucoseEventRecord>> _get() async {
-    final dexClient = activeUserDexClients.getDexClient(stationId);
-    if (dexClient == null) {
+    DexcomUserApi? getDexClient() => activeUserDexClients.getDexClient(stationId);
+    if (getDexClient() == null) {
       final client = DexcomUserApi();
       final state = await client.init(username: station.username, password: station.password);
       if (state.isLeft) {
-        throw Exception('Failed to login');
+        throw Exception('DEBUG_LOG: Failed to login: ${state.left}');
+      } else {
+        debugPrint('DEBUG_LOG: Successfully re-logged in');
       }
       activeUserDexClients.addStation(stationId, client);
     }
 
-    final save = await dexClient?.getGlucoseEventRecords(minutes: 300);
+    final save = await getDexClient()?.getGlucoseEventRecords(minutes: 300);
     if (save == null || save.isLeft) {
-      throw Exception('Failed to fetch latest glucose data');
+      throw Exception('DEBUG_LOG: Failed to fetch latest glucose data: ${save?.left}');
     }
-    return save.isRight ? save.right : [];
+    final fetchedData = save.isRight ? save.right : <GlucoseEventRecord>[];
+    await glucoseEventRecordsDao.saveGlucoseListEventRecords(stationId, fetchedData);
+    return fetchedData;
   }
 
   @override
@@ -45,6 +53,15 @@ class PatientDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Station detail'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () async {
+              //
+              // final data = await glucoseEventRecordsDao.store.query().getSnapshots(glucoseEventRecordsDao.db);
+              // print(data.first.key);
+              await _get();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
@@ -62,13 +79,10 @@ class PatientDetailScreen extends StatelessWidget {
             child: Column(
               children: [
                 LineChartWidget(),
-                FutureBuilder(
-                  future: _get(),
+                StreamBuilder<GlucoseListEventRecords>(
+                  stream: glucoseEventRecordsDao.getAllGlucoseListEventRecordsStream(stationId),
                   builder: (context, snapshot) {
-                    final data = snapshot.data;
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
+                    final data = snapshot.data?.eventRecords;
                     if (data == null) {
                       return const SizedBox.shrink();
                     } else {
@@ -85,6 +99,29 @@ class PatientDetailScreen extends StatelessWidget {
                     }
                   },
                 ),
+                // FutureBuilder(
+                //   future: _get(),
+                //   builder: (context, snapshot) {
+                //     final data = snapshot.data;
+                //     if (snapshot.hasError) {
+                //       return Text('Error: ${snapshot.error}');
+                //     }
+                //     if (data == null) {
+                //       return const SizedBox.shrink();
+                //     } else {
+                //       return ListView.builder(
+                //         itemCount: data.length,
+                //         shrinkWrap: true,
+                //         itemBuilder: (context, index) {
+                //           final item = data[index];
+                //           return ListTile(
+                //             title: Text('Item ${item.toString()} ${item.Trend?.trendArrow}'),
+                //           );
+                //         },
+                //       );
+                //     }
+                //   },
+                // ),
               ],
             ),
           ),

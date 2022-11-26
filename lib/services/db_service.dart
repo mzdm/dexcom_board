@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dexcom_board/services/models/glucose_event_records_dao.dart';
 import 'package:dexcom_board/services/models/station_dao.dart';
 import 'package:dexcom_board/services/save_directories.dart';
 import 'package:path/path.dart';
@@ -18,6 +19,7 @@ class DatabaseService {
       version: 1,
     );
     await StationModelDao(dbService: this).init();
+    await GlucoseEventRecordsDao(dbService: this).init();
   }
 
   final SaveDirectories _saveDirectories;

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dexcom_models.freezed.dart';
+
 part 'dexcom_models.g.dart';
 
 @freezed
@@ -129,15 +132,56 @@ class ValueDateTimeConverter implements JsonConverter<DateTime?, String> {
 
   @override
   DateTime? fromJson(String json) {
-    final parsed = int.tryParse(json.replaceAll(RegExp('[^0-9]'), ''));
-    if (parsed == null) {
-      return null;
+    if (json.contains('Date')) {
+      final parsed = int.tryParse(json.replaceAll(RegExp('[^0-9]'), ''));
+      if (parsed == null) {
+        return null;
+      }
+      return DateTime.fromMillisecondsSinceEpoch(parsed);
     }
-    return DateTime.fromMillisecondsSinceEpoch(parsed);
+    final dateTime = DateTime.tryParse(json);
+    return dateTime;
   }
 
   @override
   String toJson(DateTime? v) {
     return v?.toIso8601String() ?? '';
+  }
+}
+
+class GlucoseEventRecordListConverter implements JsonConverter<List<GlucoseEventRecord>, String> {
+  const GlucoseEventRecordListConverter();
+
+  @override
+  List<GlucoseEventRecord> fromJson(String json) {
+    final parsedJsonList = jsonDecode(json) as List;
+    final nullableList = List<GlucoseEventRecord?>.unmodifiable(
+      parsedJsonList.map((j) {
+        try {
+          return GlucoseEventRecord.fromJson(j as Map<String, dynamic>);
+        } catch (e) {
+          print(e);
+          return null;
+        }
+      }),
+    );
+    return List<GlucoseEventRecord>.unmodifiable(nullableList.whereType<GlucoseEventRecord>());
+  }
+
+  @override
+  String toJson(List<GlucoseEventRecord> data) {
+    return jsonEncode(
+      data
+          .map((p) {
+            try {
+              return p.toJson();
+            } catch (e) {
+              print(e);
+              return null;
+            }
+          })
+          .where((e) => e != null)
+          .toList(),
+    );
   }
 }

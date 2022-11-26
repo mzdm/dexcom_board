@@ -19,3 +19,17 @@ Map<String, dynamic> _$$_StationModelToJson(_$_StationModel instance) =>
       'username': instance.username,
       'password': instance.password,
     };
+
+_$_GlucoseListEventRecords _$$_GlucoseListEventRecordsFromJson(
+        Map<String, dynamic> json) =>
+    _$_GlucoseListEventRecords(
+      eventRecords: const GlucoseEventRecordListConverter()
+          .fromJson(json['eventRecords'] as String),
+    );
+
+Map<String, dynamic> _$$_GlucoseListEventRecordsToJson(
+        _$_GlucoseListEventRecords instance) =>
+    <String, dynamic>{
+      'eventRecords':
+          const GlucoseEventRecordListConverter().toJson(instance.eventRecords),
+    };
