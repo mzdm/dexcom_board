@@ -42,7 +42,7 @@ class TimeRefreshService {
   Future<void> onRefresh() async {
     print('DEBUG_LOG: Should refresh data');
     final allStations = await stationModelDao.getAllStations();
-    return; // temporary disabled to not refresh data for now
+    // return; // temporary disabled to not refresh data for now
     for (final entryStation in allStations.entries) {
       print('DEBUG_LOG: Refreshing station ${entryStation.key}');
       await refreshData(entryStation.key, entryStation.value);

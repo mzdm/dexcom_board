@@ -34,7 +34,7 @@ class PatientDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Station detail'),
+        title: Text('Station detail - ${station.stationName}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
