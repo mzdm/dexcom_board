@@ -1,4 +1,5 @@
 import 'package:dexcom_board/common.dart';
+import 'package:dexcom_board/providers/glucose_range_provider.dart';
 import 'package:dexcom_board/services/models/app_models.dart';
 import 'package:dexcom_board/services/time_refresh_service.dart';
 import 'package:dexcom_board/ui/widgets/add_station_dialog.dart';
@@ -6,6 +7,7 @@ import 'package:dexcom_board/ui/widgets/station_tile.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:flextras/flextras.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -22,26 +24,30 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
 
   TimeRefreshService get timeRefreshService => locator.get<TimeRefreshService>();
 
+  late final GlucoseRangeProvider glucoseRangeProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    glucoseRangeProvider = context.read<GlucoseRangeProvider>();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final children2 = [
-      SeparatedRow(
-        separatorBuilder: () => const SizedBox(width: 4.0),
-        children: [
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('3h'),
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('1h'),
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('30min'),
-          ),
-        ],
+      Consumer<GlucoseRangeProvider>(
+        builder: (_, data, __) {
+          print('Changed to ${data.currFilter}');
+          return SeparatedRow(
+            separatorBuilder: () => const SizedBox(width: 4.0),
+            children: [
+              _buildTextButton(context, GlucoseRangeFilter.threeHours),
+              _buildTextButton(context, GlucoseRangeFilter.oneHour),
+              _buildTextButton(context, GlucoseRangeFilter.thirtyMinutes),
+            ],
+          );
+        },
       ),
       TimerBuilder.periodic(
         const Duration(seconds: 1),
@@ -126,6 +132,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
           );
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildTextButton(BuildContext context, GlucoseRangeFilter glucoseRangeFilter) {
+    const selectedTextStyle = TextStyle(color: Colors.white);
+    return TextButton(
+      onPressed: () {
+        glucoseRangeProvider.changeFilter(glucoseRangeFilter);
+      },
+      style: TextButton.styleFrom(
+        backgroundColor: glucoseRangeProvider.isSelected(glucoseRangeFilter)
+            ? Theme.of(context).primaryColor
+            : null,
+      ),
+      child: Text(
+        glucoseRangeFilter.getLabel(),
+        style: glucoseRangeProvider.isSelected(glucoseRangeFilter) ? selectedTextStyle : null,
       ),
     );
   }

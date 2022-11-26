@@ -34,6 +34,7 @@ class PatientDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: 'Refresh data in station',
             onPressed: () async {
               //
               // final data = await glucoseEventRecordsDao.store.query().getSnapshots(glucoseEventRecordsDao.db);
@@ -43,6 +44,7 @@ class PatientDetailScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete),
+            tooltip: 'Delete station',
             onPressed: () async {
               activeUserDexClients.removeStation(stationId);
               await stationModelDao.deleteStation(stationId);

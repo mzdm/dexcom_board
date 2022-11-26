@@ -1,12 +1,14 @@
 import 'package:collection/collection.dart';
+import 'package:dexcom_board/providers/glucose_range_provider.dart';
 import 'package:dexcom_share_api/dexcom_models.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 const maxY = 22;
 
 extension MoodChartFilterExt on Iterable<GlucoseEventRecord>? {
-  Map<DateTime, GlucoseEventRecord?> filterByDateRange() {
+  Map<DateTime, GlucoseEventRecord?> filterByDateRange(GlucoseRangeFilter rangeFilter) {
     final allValuesMap = this == null
         ? <DateTime, GlucoseEventRecord?>{}
         : <DateTime, GlucoseEventRecord?>{
@@ -22,7 +24,8 @@ extension MoodChartFilterExt on Iterable<GlucoseEventRecord>? {
           };
 
     final now = DateTime.now();
-    final start = DateTime(now.year, now.month, now.day, now.hour - 3, now.minute);
+    final start = DateTime(
+        now.year, now.month, now.day, now.hour, now.minute - rangeFilter.getShiftInMinutes());
     final end = DateTime(now.year, now.month, now.day, now.hour, now.minute);
 
     final dateRangeValues = List.generate(
@@ -41,15 +44,13 @@ extension MoodChartFilterExt on Iterable<GlucoseEventRecord>? {
 }
 
 class LineChartWidget extends StatelessWidget {
-  LineChartWidget({
+  const LineChartWidget({
     super.key,
-    required List<GlucoseEventRecord>? data,
+    required this.data,
     this.dotSize = 2.8,
-  }) {
-    filteredData = data.filterByDateRange();
-  }
+  });
 
-  late final Map<DateTime, GlucoseEventRecord?> filteredData;
+  final List<GlucoseEventRecord>? data;
 
   final double dotSize;
 
@@ -60,6 +61,9 @@ class LineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currFilter = context.watch<GlucoseRangeProvider>().currFilter;
+    final Map<DateTime, GlucoseEventRecord?> filteredData = data.filterByDateRange(currFilter);
+
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: AspectRatio(
@@ -79,7 +83,7 @@ class LineChartWidget extends StatelessWidget {
               bottom: 12,
             ),
             child: LineChart(
-              mainData(context),
+              mainData(context, filteredData),
             ),
           ),
         ),
@@ -139,7 +143,7 @@ class LineChartWidget extends StatelessWidget {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  LineChartData mainData(BuildContext context) {
+  LineChartData mainData(BuildContext context, Map<DateTime, GlucoseEventRecord?> filteredData) {
     return LineChartData(
       borderData: FlBorderData(show: false),
       minX: 0,
