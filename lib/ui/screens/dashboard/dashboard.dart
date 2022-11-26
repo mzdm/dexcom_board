@@ -7,6 +7,7 @@ import 'package:dexcom_board/ui/widgets/station_tile.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:flextras/flextras.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_builder/timer_builder.dart';
 
@@ -66,6 +67,37 @@ class _DashBoardScreenState extends State<DashBoardScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dexcom Board'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: TimerBuilder.periodic(
+              const Duration(seconds: 1),
+              builder: (context) {
+                final now = DateTime.now();
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      DateFormat('KK:mm:ss').format(now),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('d. M. ').format(now),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -138,7 +170,9 @@ class _DashBoardScreenState extends State<DashBoardScreen>
   }
 
   Widget _buildTextButton(
-      BuildContext context, GlucoseRangeFilter glucoseRangeFilter) {
+    BuildContext context,
+    GlucoseRangeFilter glucoseRangeFilter,
+  ) {
     const selectedTextStyle = TextStyle(color: Colors.white);
     return TextButton(
       onPressed: () {
