@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-String fhirApiKey = '';
+const fhirApiKey = String.fromEnvironment('FHIR_API_KEY');
 String fhirApiUrl = '';
 
 class FhirService {
