@@ -33,7 +33,8 @@ class StationTile extends StatelessWidget {
         return InkWell(
           onTap: () {
             AutoRouter.of(context).push(
-                PatientDetailRoute(stationId: stationId, station: station));
+              PatientDetailRoute(stationId: stationId, station: station),
+            );
           },
           child: Container(
             decoration: BoxDecoration(
@@ -59,7 +60,9 @@ class StationTile extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              color: Colors.black, fontSize: 20),
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                       Text(
@@ -99,16 +102,6 @@ class StationTile extends StatelessWidget {
                                     ? Colors.redAccent
                                     : Colors.black,
                                 fontSize: 17,
-                              ),
-                            ),
-                            TextSpan(
-                              text:
-                                  '    ${latestValue?.Trend?.trendArrow ?? ''}',
-                              style: TextStyle(
-                                color: latestValue?.isCritical == true
-                                    ? Colors.redAccent
-                                    : Colors.black,
-                                fontSize: 15,
                               ),
                             ),
                           ],
