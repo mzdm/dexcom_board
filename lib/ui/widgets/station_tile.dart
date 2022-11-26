@@ -44,7 +44,27 @@ class StationTile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(station.stationName, style: TextStyle(color: Colors.black, fontSize: 20)),
+                  // Text(station.stationName, style: TextStyle(color: Colors.black, fontSize: 20))
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            station.stationName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.black, fontSize: 20),
+                          ),
+                        ),
+                        Text(
+                          latestValue?.Trend?.trendArrow ?? '',
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
                   IgnorePointer(
                     child: LineChartWidget(data: data, dotSize: 1, bottomLabelSize: 10),
                   ),
@@ -73,6 +93,15 @@ class StationTile extends StatelessWidget {
                                       ? Colors.redAccent
                                       : Colors.black,
                                   fontSize: 17,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '    ${latestValue?.Trend?.trendArrow ?? ''}',
+                                style: TextStyle(
+                                  color: latestValue?.isCritical == true
+                                      ? Colors.redAccent
+                                      : Colors.black,
+                                  fontSize: 15,
                                 ),
                               ),
                             ],
