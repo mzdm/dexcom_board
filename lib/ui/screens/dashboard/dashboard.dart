@@ -15,14 +15,12 @@ class DashBoardScreen extends StatefulWidget {
   State<DashBoardScreen> createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen>
-    with AddStationDialog {
+class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog {
   final TextEditingController stationNameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  TimeRefreshService get timeRefreshService =>
-      locator.get<TimeRefreshService>();
+  TimeRefreshService get timeRefreshService => locator.get<TimeRefreshService>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +48,10 @@ class _DashBoardScreenState extends State<DashBoardScreen>
         builder: (context) {
           return Text(
             'Next data update: ${timeRefreshService.formatedTimeToRefresh}',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
           );
         },
       ),
