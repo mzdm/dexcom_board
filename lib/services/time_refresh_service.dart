@@ -50,9 +50,6 @@ class TimeRefreshService {
     }
   }
 
-  Stream<DateTime> get actualDateTimeStream =>
-      _actualDateTimeStreamController.stream.startWith(DateTime.now());
-
   Future<List<GlucoseEventRecord>> refreshData(String stationId, StationModel station) async {
     DexcomUserApi? getDexClient() => activeUserDexClients.getDexClient(stationId);
     if (getDexClient() == null) {
