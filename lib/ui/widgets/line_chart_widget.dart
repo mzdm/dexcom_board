@@ -106,7 +106,6 @@ class LineChartWidget extends StatelessWidget {
     );
 
     final entry = filteredData.entries.elementAt(value.toInt());
-    print(entry);
     final shouldShow = currFilter.minutesRemainderBottomLabel(entry.key);
 
     return SideTitleWidget(

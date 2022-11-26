@@ -73,12 +73,12 @@ mixin AddStationDialog on State<DashBoardScreen> {
                     activeUserDexClients.addStation(stationId, client);
                     await AutoRouter.of(context).pop();
                   } else {
-                    // final error = response.left;
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(
-                    //     content: Text('An error occurred: ${error.message}'),
-                    //   ),
-                    // );
+                    final error = response.left;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('An error occurred: ${error.message}'),
+                      ),
+                    );
                   }
                   await AutoRouter.of(context).pop();
                 } else {
