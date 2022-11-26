@@ -1,9 +1,12 @@
 import 'package:dexcom_board/common.dart';
 import 'package:dexcom_board/services/models/app_models.dart';
+import 'package:dexcom_board/services/time_refresh_service.dart';
 import 'package:dexcom_board/ui/widgets/add_station_dialog.dart';
 import 'package:dexcom_board/ui/widgets/station_tile.dart';
+import 'package:dexcom_board/utils/app_setup.dart';
 import 'package:flextras/flextras.dart';
 import 'package:flutter/material.dart';
+import 'package:timer_builder/timer_builder.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({super.key});
@@ -16,6 +19,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
   final TextEditingController stationNameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  TimeRefreshService get timeRefreshService => locator<TimeRefreshService>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +53,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AddStationDialog
                     ),
                   ],
                 ),
-                Text('Aktualizace dat za 3h'),
+                TimerBuilder.periodic(
+                  const Duration(seconds: 1),
+                  builder: (context) {
+                    final elapsed = timeRefreshService.timer.tick;
+                    return Text('Aktualizace dat za: ${elapsed}');
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 16),

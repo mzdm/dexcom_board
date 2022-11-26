@@ -11,6 +11,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Dexcom Board',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: AppColors.primarySwatch,
       ),
