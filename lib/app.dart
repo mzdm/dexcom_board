@@ -1,20 +1,29 @@
 import 'package:dexcom_board/common.dart';
 import 'package:dexcom_board/navigation/app_router.gr.dart';
+import 'package:dexcom_board/providers/glucose_range_provider.dart';
+import 'package:dexcom_board/utils/app_setup.dart';
+import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
-  App({super.key});
+  const App({super.key});
 
-  final appRouter = AppRouter();
+  AppRouter get appRouter => locator.get<AppRouter>();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Dexcom Board',
-      theme: ThemeData(
-        primarySwatch: AppColors.primarySwatch,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<GlucoseRangeProvider>(create: (_) => GlucoseRangeProvider()),
+      ],
+      child: MaterialApp.router(
+        title: 'Dexcom Board',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: AppColors.primarySwatch,
+        ),
+        routerDelegate: AutoRouterDelegate(appRouter),
+        routeInformationParser: appRouter.defaultRouteParser(),
       ),
-      routerDelegate: AutoRouterDelegate(appRouter),
-      routeInformationParser: appRouter.defaultRouteParser(),
     );
   }
 }

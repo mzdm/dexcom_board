@@ -14,6 +14,7 @@
 import 'package:auto_route/auto_route.dart' as _i3;
 import 'package:flutter/material.dart' as _i4;
 
+import '../services/models/app_models.dart' as _i5;
 import '../ui/patient_detail/pacient_detail.dart' as _i2;
 import '../ui/screens/dashboard/dashboard.dart' as _i1;
 
@@ -30,9 +31,14 @@ class AppRouter extends _i3.RootStackRouter {
       );
     },
     PatientDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<PatientDetailRouteArgs>();
       return _i3.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const _i2.PatientDetailScreen(),
+        child: _i2.PatientDetailScreen(
+          key: args.key,
+          stationId: args.stationId,
+          station: args.station,
+        ),
       );
     },
   };
@@ -64,12 +70,39 @@ class DashBoardRoute extends _i3.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.PatientDetailScreen]
-class PatientDetailRoute extends _i3.PageRouteInfo<void> {
-  const PatientDetailRoute()
-      : super(
+class PatientDetailRoute extends _i3.PageRouteInfo<PatientDetailRouteArgs> {
+  PatientDetailRoute({
+    _i4.Key? key,
+    required String stationId,
+    required _i5.StationModel station,
+  }) : super(
           PatientDetailRoute.name,
           path: '/patient-detail-screen',
+          args: PatientDetailRouteArgs(
+            key: key,
+            stationId: stationId,
+            station: station,
+          ),
         );
 
   static const String name = 'PatientDetailRoute';
+}
+
+class PatientDetailRouteArgs {
+  const PatientDetailRouteArgs({
+    this.key,
+    required this.stationId,
+    required this.station,
+  });
+
+  final _i4.Key? key;
+
+  final String stationId;
+
+  final _i5.StationModel station;
+
+  @override
+  String toString() {
+    return 'PatientDetailRouteArgs{key: $key, stationId: $stationId, station: $station}';
+  }
 }

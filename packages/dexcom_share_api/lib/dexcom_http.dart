@@ -28,13 +28,13 @@ class DexcomUserApi {
   String? sessionId;
   String? accountId;
 
-  Future<void> init({
+  Future<Either<DioError, void>> init({
     required String username,
     required String password,
   }) async {
     this.username = username;
     this.password = password;
-    await _createSession();
+    return _createSession();
   }
 
   Future<Either<DioError, void>> _createSession() async {

@@ -1,301 +1,220 @@
+import 'package:collection/collection.dart';
+import 'package:dexcom_board/providers/glucose_range_provider.dart';
+import 'package:dexcom_share_api/dexcom_models.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class LineChartWidget extends StatefulWidget {
-  const LineChartWidget({super.key});
+const maxY = 22;
 
-  @override
-  State<LineChartWidget> createState() => _LineChartWidgetState();
+extension MoodChartFilterExt on Iterable<GlucoseEventRecord>? {
+  Map<DateTime, GlucoseEventRecord?> filterByDateRange(GlucoseRangeFilter rangeFilter) {
+    final allValuesMap = this == null
+        ? <DateTime, GlucoseEventRecord?>{}
+        : <DateTime, GlucoseEventRecord?>{
+            for (final event in this!)
+              if (event.WT != null && event.glucoseValueEu != null)
+                DateTime(
+                  event.WT!.year,
+                  event.WT!.month,
+                  event.WT!.day,
+                  event.WT!.hour,
+                  event.WT!.minute,
+                ): event,
+          };
+
+    final now = DateTime.now();
+    final start = DateTime(
+        now.year, now.month, now.day, now.hour, now.minute - rangeFilter.getShiftInMinutes());
+    final end = DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
+    final dateRangeValues = List.generate(
+      end.difference(start).inMinutes + 1,
+      (i) => start.add(Duration(minutes: i)),
+    );
+
+    final filteredMap = <DateTime, GlucoseEventRecord?>{};
+    for (final date in dateRangeValues) {
+      final dayEvent = allValuesMap[date];
+      filteredMap[date] = dayEvent;
+    }
+
+    return filteredMap;
+  }
 }
 
-class _LineChartWidgetState extends State<LineChartWidget> {
-  List<Color> gradientColors = [
+class LineChartWidget extends StatelessWidget {
+  const LineChartWidget({
+    super.key,
+    required this.data,
+    this.dotSize = 2.8,
+    this.bottomLabelSize = 16.0,
+  });
+
+  final List<GlucoseEventRecord>? data;
+
+  final double bottomLabelSize;
+  final double dotSize;
+
+  static const List<Color> gradientColors = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
 
-  bool showAvg = false;
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1.70,
-          child: DecoratedBox(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(18),
-              ),
-              color: Color(0xff232d37),
+    final currFilter = context.watch<GlucoseRangeProvider>().currFilter;
+    final Map<DateTime, GlucoseEventRecord?> filteredData = data.filterByDateRange(currFilter);
+
+    return Padding(
+      padding: const EdgeInsets.all(25.0),
+      child: AspectRatio(
+        aspectRatio: 1.70,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(18),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                right: 18,
-                left: 12,
-                top: 24,
-                bottom: 12,
-              ),
-              child: LineChart(
-                showAvg ? avgData() : mainData(),
-              ),
+            color: Theme.of(context).primaryColor.withOpacity(0.05),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              right: 18,
+              left: 12,
+              top: 24,
+              bottom: 12,
+            ),
+            child: LineChart(
+              mainData(context, filteredData, currFilter),
             ),
           ),
         ),
-        SizedBox(
-          width: 60,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                showAvg = !showAvg;
-              });
-            },
-            child: Text(
-              'avg',
-              style: TextStyle(
-                fontSize: 12,
-                color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color(0xff68737d),
+  Widget bottomTitleWidgets(
+    double value,
+    TitleMeta meta,
+    Map<DateTime, GlucoseEventRecord?> filteredData,
+    GlucoseRangeFilter currFilter,
+  ) {
+    final style = TextStyle(
+      color: Colors.black,
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: bottomLabelSize,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
+
+    final entry = filteredData.entries.elementAt(value.toInt());
+    final shouldShow = currFilter.minutesRemainderBottomLabel(entry.key);
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: text,
+      child: shouldShow
+          ? Text(
+              entry.key.hour.toString().padLeft(2, '0') +
+                  ':' +
+                  entry.key.minute.toString().padLeft(2, '0'),
+              style: style,
+            )
+          : const SizedBox.shrink(),
     );
   }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color(0xff67727d),
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
-  }
-
-  LineChartData mainData() {
+  LineChartData mainData(
+    BuildContext context,
+    Map<DateTime, GlucoseEventRecord?> filteredData,
+    GlucoseRangeFilter currFilter,
+  ) {
     return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
+      borderData: FlBorderData(show: false),
       minX: 0,
-      maxX: 11,
       minY: 0,
-      maxY: 6,
+      maxY: maxY.toDouble(),
+      maxX: filteredData.length - 1,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 5,
+          spots: filteredData.entries
+              .mapIndexed((i, e) {
+                final event = e.value;
+                return event == null ? null : FlSpot(i.toDouble(), e.value!.glucoseValueEu!);
+              })
+              .whereType<FlSpot>()
+              .toList(),
+          isCurved: false,
+          barWidth: 2,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
             show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
+            getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
+              radius: dotSize,
+              color: Theme.of(context).primaryColor,
+              strokeColor: Theme.of(context).primaryColor,
             ),
           ),
+          color: Theme.of(context).primaryColor,
         ),
       ],
-    );
-  }
-
-  LineChartData avgData() {
-    return LineChartData(
-      lineTouchData: LineTouchData(enabled: false),
+      extraLinesData: ExtraLinesData(
+        extraLinesOnTop: false,
+        horizontalLines: List.generate(maxY + 1, (index) => index)
+            .mapIndexed(
+              (i, _) => HorizontalLine(
+                y: i % 2 == 0 ? i.toDouble() : 0,
+                color: Theme.of(context).primaryColor.withOpacity(0.2),
+                strokeWidth: 1,
+              ),
+            )
+            .toList(),
+      ),
       gridData: FlGridData(
         show: true,
-        drawHorizontalLine: true,
+        drawVerticalLine: false,
+        drawHorizontalLine: false,
         verticalInterval: 1,
-        horizontalInterval: 1,
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
       ),
       titlesData: FlTitlesData(
         show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
             interval: 1,
+            getTitlesWidget: (value, meta) =>
+                bottomTitleWidgets(value, meta, filteredData, currFilter),
           ),
         ),
         leftTitles: AxisTitles(
+          drawBehindEverything: true,
           sideTitles: SideTitles(
+            interval: 2,
             showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
+            reservedSize: 40,
           ),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
         ),
         rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: [
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-              ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                  .lerp(0.2)!,
-            ],
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: [
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-                ColorTween(begin: gradientColors[0], end: gradientColors[1])
-                    .lerp(0.2)!
-                    .withOpacity(0.1),
-              ],
-            ),
-          ),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
         ),
-      ],
+      ),
+      lineTouchData: LineTouchData(
+        getTouchLineEnd: (_, __) => double.infinity,
+        getTouchedSpotIndicator: (_, spotIndexes) {
+          return spotIndexes.map((spotIndex) {
+            return TouchedSpotIndicatorData(
+              FlLine(color: Theme.of(context).primaryColor, strokeWidth: 3),
+              FlDotData(
+                getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
+                  radius: dotSize,
+                  color: Theme.of(context).primaryColor,
+                  strokeWidth: 0,
+                ),
+              ),
+            );
+          }).toList();
+        },
+      ),
     );
   }
 }
