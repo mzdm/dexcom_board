@@ -97,6 +97,31 @@ enum FutureTrend {
         return "trend unavailable";
     }
   }
+
+  String get trendArrow {
+    switch (this) {
+      case FutureTrend.None:
+        return "";
+      case FutureTrend.DoubleUp:
+        return "↑↑";
+      case FutureTrend.SingleUp:
+        return "↑";
+      case FutureTrend.FortyFiveUp:
+        return "↗";
+      case FutureTrend.Flat:
+        return "→";
+      case FutureTrend.FortyFiveDown:
+        return "↘";
+      case FutureTrend.SingleDown:
+        return "↓";
+      case FutureTrend.DoubleDown:
+        return "↓↓";
+      case FutureTrend.NotComputable:
+        return "";
+      case FutureTrend.OutOfRange:
+        return "";
+    }
+  }
 }
 
 class ValueDateTimeConverter implements JsonConverter<DateTime?, String> {

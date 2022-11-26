@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 class PatientDetailScreen extends StatelessWidget {
   const PatientDetailScreen({super.key});
 
-  Future<List<GlucoseEventRecord>> get() async {
+  Future<List<GlucoseEventRecord>> _get() async {
     final client = DexcomUserApi();
-    await client.init(username: 'assdf', password: 'dfddf');
+    await client.init(username: 'dffd', password: 'dffd');
     final events = await client.getGlucoseEventRecords(minutes: 300);
     if (events.isRight) {
       return events.right;
@@ -28,7 +28,7 @@ class PatientDetailScreen extends StatelessWidget {
               children: [
                 LineChartWidget(),
                 FutureBuilder(
-                  future: get(),
+                  future: _get(),
                   builder: (context, snapshot) {
                     final data = snapshot.data;
                     if (data == null) {
@@ -40,7 +40,7 @@ class PatientDetailScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final item = data[index];
                           return ListTile(
-                            title: Text('Item ${item.toString()}'),
+                            title: Text('Item ${item.toString()} ${item.Trend?.trendArrow}'),
                           );
                         },
                       );
