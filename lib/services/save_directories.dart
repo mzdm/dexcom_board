@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 
 class SaveDirectories {
   Future<void> init() async {
-    supportDir = await getApplicationSupportDirectory();
-    await Directory(dbDirPath).create(recursive: true);
+    supportDir = kIsWeb ? Directory('') : await getApplicationSupportDirectory();
+    if (!kIsWeb) await Directory(dbDirPath).create(recursive: true);
   }
 
   late final Directory supportDir;
