@@ -28,7 +28,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Build apk
-        run: flutter build apk --release
+        run: flutter build apk --release --dart-define FHIR_API_KEY=$FHIR_API_KEY
+        env:
+          FHIR_API_KEY: ${{ secrets.FHIR_API_KEY }}
 
       - name: GitHub release
         uses: ncipollo/release-action@v1
