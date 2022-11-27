@@ -36,6 +36,19 @@ In short, we have rewritten [pydexcom](https://github.com/gagebenne/pydexcom) Py
 This library allows us interact with Dexcom Share service. The difference from the official Dexcom API is that this library uses a private hidden one,
 with which we can fetch real-time glucose levels.
 
+The architecture of our solution is “one station – one Dexcom account”. The staff has to set up this account only once. After the setup, staff must enable sharing in the Dexcom app. The next step is to enter the Dexcom login and password into our app and everything is ready.
+Thanks to Android multi-user settings, it is possible to run multiple instances of the 
+Dexcom app on one device. This means only one device is needed to be 
+paired with all the sensors. If the transmitter “dies” we can 
+automatically continue in the monitoring/data collection as long as it is 
+linked to the same Dexcom account. It is also possible to use one phone for each patient.
+
+Right now, our project is ready to go. It needs one device for displaying the dashboard, 
+one device for Dexcom app/accounts management and that’s it. In the “worst” 
+scenario the same Android device can be used both for displaying the dashboard 
+and managing the Dexcom app/accounts. The device for managing Dexcom app/accounts 
+needs to run the Dexcom app nonstop within the Bluetooth range of all sensors. We have a working demo, which has proved the feasibility of our solution.
+
 The application is also able to upload patients' snapshots to the FHIR server.
 
 
