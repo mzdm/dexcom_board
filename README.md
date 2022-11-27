@@ -2,6 +2,10 @@
 
 This is a submission for **European Healthcare Hackathon (EHH) 2022**.
 
+**Team name**: Bindworks union
+
+**Team members**: [Matěj Žídek](https://www.linkedin.com/in/matej-z/), [Tomáš Dorda](https://www.linkedin.com/in/tomas-dorda/), [Daniel Šulc](https://www.linkedin.com/in/daniel-%C5%A1ulc-737312151/)
+
 ![Dexcom Board](./showcase.png)
 
 We have chosen **Challenge 5**.
@@ -41,7 +45,7 @@ run the web version from [here](https://dexcom-board.web.app/#/).
 
 **Note**: Make sure to have at least one follower to enable the share service.
 
-**Information for testers**: If you don't have a Dexcom account and connected it to G6 sensor, approach @Matej Zidek, @Tomas Dorda or @Daniel Sulc
+**Information for testers**: If you don't have a Dexcom account and connected it to G6 sensor, approach @Daniel Šulc, @Tomáš Dorda or @Matěj Žídek
 on the EHH2022 Slack channel. We can send you the credentials.
 
 It should also support macOS, iOS and Linux, but we have not tested it on these platforms.
