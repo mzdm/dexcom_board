@@ -71,7 +71,7 @@ class GlucoseEventRecord with _$GlucoseEventRecord {
       return false;
     }
     // return glucoseValue <= 3.9 || glucoseValue > 0.2;
-    return glucoseValue <= 3.9 || glucoseValue > 22.2;
+    return glucoseValue <= 3.9 || glucoseValue >= 14;
   }
 }
 
