@@ -4,19 +4,19 @@ import 'package:dexcom_board/common.dart';
 // red     FB545D   x <= 3.9
 // red     FB545D   x >= 14
 // orange  E59E34   x >= 10.1 && x <= 13.9
-Color getColorByGlucose(double? value) {
-  if (value == null) return Colors.black;
+Color getColorByGlucose(double? value, {double opacity = 1.0}) {
+  if (value == null) return Colors.black.withOpacity(opacity);
 
   if (value >= 4 && value <= 10) {
-    return Colors.green;
+    return Colors.green.withOpacity(opacity);
   } else if (value <= 3.9) {
-    return Colors.red;
+    return Colors.red.withOpacity(opacity);
   } else if (value >= 14) {
-    return Colors.red;
+    return Colors.red.withOpacity(opacity);
   } else if (value >= 10.1 && value <= 13.9) {
-    return Colors.orange;
+    return Colors.orange.withOpacity(opacity);
   }
-  return Colors.black;
+  return Colors.black.withOpacity(opacity);
 }
 
 Color getBorderColorByGlucose(double? value) {

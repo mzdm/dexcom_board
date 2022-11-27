@@ -83,7 +83,7 @@ class LineChartWidget extends StatelessWidget {
             borderRadius: const BorderRadius.all(
               Radius.circular(18),
             ),
-            color: Theme.of(context).primaryColor.withOpacity(0.05),
+            color: Colors.white,
           ),
           child: Padding(
             padding: const EdgeInsets.only(
@@ -167,6 +167,30 @@ class LineChartWidget extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
       ],
+      rangeAnnotations: RangeAnnotations(
+        horizontalRangeAnnotations: [
+          HorizontalRangeAnnotation(
+            y1: 0.0,
+            y2: 3.9,
+            color: Colors.red.withOpacity(0.2),
+          ),
+          HorizontalRangeAnnotation(
+            y1: 3.9,
+            y2: 10.0,
+            color: Colors.green.withOpacity(0.2),
+          ),
+          HorizontalRangeAnnotation(
+            y1: 10.0,
+            y2: 13.9,
+            color: Colors.orange.withOpacity(0.2),
+          ),
+          HorizontalRangeAnnotation(
+            y1: 13.9,
+            y2: maxY.toDouble(),
+            color: Colors.red.withOpacity(0.2),
+          ),
+        ],
+      ),
       extraLinesData: ExtraLinesData(
         extraLinesOnTop: false,
         horizontalLines: List.generate(maxY + 1, (index) => index)
