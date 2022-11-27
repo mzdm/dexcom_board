@@ -8,6 +8,7 @@ import 'package:dexcom_board/services/time_refresh_service.dart';
 import 'package:dexcom_board/ui/widgets/line_chart_widget.dart';
 import 'package:dexcom_board/ui/widgets/upload_snapshot_dialog.dart';
 import 'package:dexcom_board/utils/app_setup.dart';
+import 'package:dexcom_board/utils/color_helper.dart';
 import 'package:dexcom_share_api/dexcom_models.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -200,7 +201,11 @@ class PatientDetailScreen extends StatelessWidget {
           child: Text(
             '${dataRow.glucoseValueEu}',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15.0),
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w500,
+              color: getColorByGlucose(dataRow.glucoseValueEu),
+            ),
           ),
         ),
         Padding(
@@ -208,7 +213,10 @@ class PatientDetailScreen extends StatelessWidget {
           child: Text(
             '${dataRow.Trend?.trendArrow}',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15.0),
+            style: const TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

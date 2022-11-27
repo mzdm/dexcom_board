@@ -8,13 +8,13 @@ Color getColorByGlucose(double? value) {
   if (value == null) return Colors.black;
 
   if (value >= 4 && value <= 10) {
-    return const Color(0xFF3EF981);
+    return Colors.green;
   } else if (value <= 3.9) {
-    return const Color(0xFFFB545D);
+    return Colors.red;
   } else if (value >= 14) {
-    return const Color(0xFFFB545D);
+    return Colors.red;
   } else if (value >= 10.1 && value <= 13.9) {
-    return const Color(0xFFE59E34);
+    return Colors.orange;
   }
   return Colors.black;
 }
@@ -25,11 +25,11 @@ Color getBorderColorByGlucose(double? value) {
   if (value >= 4 && value <= 10) {
     return Colors.transparent;
   } else if (value <= 3.9) {
-    return const Color(0xFFFB545D);
+    return Colors.red;
   } else if (value >= 14) {
-    return const Color(0xFFFB545D);
+    return Colors.red;
   } else if (value >= 10.1 && value <= 13.9) {
-    return const Color(0xFFE59E34);
+    return Colors.orange;
   }
   return Colors.transparent;
 }
